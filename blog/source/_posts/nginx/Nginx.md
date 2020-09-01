@@ -33,7 +33,7 @@ nginx version: nginx/1.14.0 (Ubuntu)
 ~ ❯ cd /etc/nginx
 ```
 
-* 配置文件**nginx.conf** 路径为**/usr/local/nginx/conf**， **/etc/nginx**或 **/usr/local/etc/nginx**。![](/img/Nginx.assets/image-20200820110747003.png)
+* 配置文件`nginx.conf` 路径为`/usr/local/nginx/conf`， `/etc/nginx`或 `/usr/local/etc/nginx`。![](/img/Nginx.assets/image-20200820110747003.png)
 
 * Nginx 有**一个主进程**和**多个工作进程**。
 * 主进程主要用来**读取验证配置**以及**维护工作进程**。
@@ -73,9 +73,9 @@ ps -ax | grep nginx
 
 ![image-20200820164024523](/img/Nginx.assets/image-20200820164024523.png)
 
-> **nginx -s quit** 会等待当前请求处理完成再去关机 该命令需要启动当前Ngnix的用户执行
+> `nginx -s quit` 会等待当前请求处理完成再去关机 该命令需要启动当前Ngnix的用户执行
 
-> **nginx -s reload** 主线程接收到重载配置文件的信号，会验证加载使用新的配置信息。如果加载成功，则会开启新的工作进程去接收请求，通知旧的工作进程shut down， 旧的进程接收到通知后会停止接收新的请求，并且将手里的请求处理完成，然后去exit。否则主进程回滚修改，继续使用旧的配置信息。
+> `nginx -s reload` 主线程接收到重载配置文件的信号，会验证加载使用新的配置信息。如果加载成功，则会开启新的工作进程去接收请求，通知旧的工作进程shut down， 旧的进程接收到通知后会停止接收新的请求，并且将手里的请求处理完成，然后去exit。否则主进程回滚修改，继续使用旧的配置信息。
 
 > 以下命令也可以平滑关闭Nginx
 >
@@ -187,11 +187,11 @@ http {
 
 ![image-20200820165729596](/img/Nginx.assets/image-20200820165729596.png)
 
-* **#**后为注释内容。
+* #后为注释内容。
 
   > 可以认为整个配置文件用{}包裹，则其上下文暂时理解为作用域吧
 
-* 建议按照不同功能模块将配置文件拆分为一组文件，放在**/etc/nginx/conf.d**文件夹中,在**nginx.conf**配置文件中使用**incloud**命令引入
+* 建议按照不同功能模块将配置文件拆分为一组文件，放在`/etc/nginx/conf.d`文件夹中,在`nginx.conf`配置文件中使用`incloud`命令引入
 
   ![image-20200829113211025](/img/Nginx.assets/image-20200829113211025.png)
 
@@ -628,7 +628,7 @@ nginx支持的请求处理方式：
    }
    ```
 
-   * proxy_pass -> 设置代理服务器的协议和地址，可以指定**http**和**https**协议，地址可以为域名或者IP地址，端口可选
+   * proxy_pass -> 设置代理服务器的协议和地址，可以指定`http`和`https`协议，地址可以为域名或者IP地址，端口可选
 
    其他可用相似参数：
 
@@ -638,7 +638,7 @@ nginx支持的请求处理方式：
 
    * scgi_pass -> 设置SCGI 服务器，地址由域名或IP以及端口号组成
 
-   * uwsgi_pass -> 设置uwsgi服务器，地址由域名或IP以及端口号组成。协议可以指定**uwsgi**或**suwsgi**
+   * uwsgi_pass -> 设置uwsgi服务器，地址由域名或IP以及端口号组成。协议可以指定`uwsgi`或`suwsgi`
 
 3. 负载均衡方式
    * Round Robin（轮询）默认方式，根据权重在服务器之间进行均匀分发请求。
