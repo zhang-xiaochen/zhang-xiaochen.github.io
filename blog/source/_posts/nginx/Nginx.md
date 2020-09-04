@@ -605,53 +605,183 @@ nginx支持的请求处理方式：
 
 1. http 中定义 upstream , upstream 中定义server
 
-   ```shell
-   upstream backend {
-       server backend1.example.com weight=5;
-       server 127.0.0.1:8080       max_fails=3 fail_timeout=30s;
-       server unix:/tmp/backend3;
-   
-       server backup1.example.com  backup;
-   }
-   ```
+```shell
+upstream backend {
+    server backend1.example.com weight=5;
+    server 127.0.0.1:8080       max_fails=3 fail_timeout=30s;
+    server unix:/tmp/backend3;
 
-   * upstream -> 定义一组servers监听不同的端口，监听TCP和UNIX-domain sockets (http://unix:/tmp/backend.socket:/uri/) 可以混合使用。默认情况下使用轮巡方式进行负载均衡，如上example，根据权重不同，每7个请求会有5个请求分发在backend1.example.com服务器上，另外两个请求分给其他的服务器。
+    server backup1.example.com  backup;
+}
+```
 
-   
+* upstream -> 定义一组servers监听不同的端口，监听TCP和UNIX-domain sockets (http://unix:/tmp/backend.socket:/uri/) 可以混合使用。默认情况下使用轮巡方式进行负载均衡，如上example，根据权重不同，每7个请求会有5个请求分发在backend1.example.com服务器上，另外两个请求分给其他的服务器。
+
+
 
 2. http 中定义虚拟服务器 server
 
-   ```shell
-   server {
-       location / {
-           proxy_pass http://backend;
-       }
-   }
-   ```
+```shell
+server {
+    location / {
+        proxy_pass http://backend;
+    }
+}
+```
 
-   * proxy_pass -> 设置代理服务器的协议和地址，可以指定`http`和`https`协议，地址可以为域名或者IP地址，端口可选
+* proxy_pass -> 设置代理服务器的协议和地址，可以指定`http`和`https`协议，地址可以为域名或者IP地址，端口可选
 
-   其他可用相似参数：
+其他可用相似参数：
 
-   * fastcgi_pass -> 设置FastCGI服务器，地址由域名或IP以及端口号组成
+* fastcgi_pass -> 设置FastCGI服务器，地址由域名或IP以及端口号组成
 
-   * memcached_pass -> 设置缓存服务器，地址由域名或IP以及端口号组成
+* memcached_pass -> 设置缓存服务器，地址由域名或IP以及端口号组成
 
-   * scgi_pass -> 设置SCGI 服务器，地址由域名或IP以及端口号组成
+* scgi_pass -> 设置SCGI 服务器，地址由域名或IP以及端口号组成
 
-   * uwsgi_pass -> 设置uwsgi服务器，地址由域名或IP以及端口号组成。协议可以指定`uwsgi`或`suwsgi`
+* uwsgi_pass -> 设置uwsgi服务器，地址由域名或IP以及端口号组成。协议可以指定`uwsgi`或`suwsgi`
 
 3. 负载均衡方式
-   * Round Robin（轮询）默认方式，根据权重在服务器之间进行均匀分发请求。
-   * Least Connections
-   * IP Hash
-   * Generic Hash
-   * Random
-   * Least Time （plus才有）
 
+* Round Robin（轮询）默认方式，根据`权重`在服务器之间进行均匀分发请求。
 
+  ```shell
+  upstream backend {
+     # no load balancing method is specified for Round Robin
+     server backend1.example.com;
+     server backend2.example.com;
+  }
+  ```
 
+* Least Connections 将请求发送到`最少数量的活动链接`的服务器,同时考虑服务器`权重`。
 
+  ```shell
+  upstream backend {
+      least_conn;
+      server backend1.example.com;
+      server backend2.example.com;
+  }
+  ```
+
+* IP Hash 根据客户端IP地址确定向其发送请求的服务器。 在这种情况下，可以使用`IPv4地址的前三个八位字节`或`整个IPv6地址`来计算哈希值。 该方法保证了`来自相同地址的请求将到达同一服务器`，除非该请求不可用。
+
+  ```shell
+  upstream backend {
+      ip_hash;
+      server backend1.example.com;
+      server backend2.example.com;
+  }
+  ```
+
+  如果其中一台服务器需要暂时从负载平衡循环中删除，则可以使用`down`参数对其进行标记，以保留客户端IP地址的当前哈希值。 该服务器要处理的请求将自动发送到组中的下一个服务器：
+
+  ```shell
+  upstream backend {
+      server backend1.example.com;
+      server backend2.example.com;
+      server backend3.example.com down;
+  }
+  ```
+
+* Generic Hash 根据用户自定义key计算hash值，从而分发服务。key可以是字符串、变量或者两者组合。
+
+  ```shell
+  upstream backend {
+      hash $request_uri consistent;
+      server backend1.example.com;
+      server backend2.example.com;
+  }
+  ```
+
+  使用`consistent`参数启用`Ketama`一致性哈希算法。如果修改缓存中的服务器映射，这种方式只会有少数的密钥->服务器关系重新映射，从而减少缓存丢失。
+
+* Random 请求会随机分发。如果指定`two`这个参数，那么会首先根据权重选则两个服务器，然后根据指定的以下方法进行请求分发。
+
+  - `least_conn` – 活动链接数最少
+  - `least_time=header` (NGINX Plus) – 服务器返回响应头平均的最小时间([`$upstream_header_time`](https://nginx.org/en/docs/http/ngx_http_upstream_module.html#var_upstream_header_time))
+  - `least_time=last_byte` (NGINX Plus) – 服务器接收完整响应的平均最小时间 ([`$upstream_response_time`](https://nginx.org/en/docs/http/ngx_http_upstream_module.html#var_upstream_response_time))
+
+  ```shell
+  upstream backend {
+      random two least_time=last_byte;
+      server backend1.example.com;
+      server backend2.example.com;
+      server backend3.example.com;
+      server backend4.example.com;
+  }
+  ```
+
+  Random负载均衡适用于分布式系统，其会将请求在后台的指定服务的一组服务器中随机分发。如果是其他明确后台服务具体服务器的系统，应该使用其他方法，round robin(轮询)、laest connections(最少链接)或 least time(最少时间)。
+
+  > 除了Round Robin，其他负载均衡方法要放在 upstream{}块中其他命令之前。
+
+* Least Time （plus才有）对于每个请求，NGINX Plus选择平均延迟最低和活动连接数量最低的服务器，其中最低平均延迟是根据`least_time`指定的配置参数计算的。`last_time`取值如下：
+
+  - `header` – 服务器接收第一个字节的时间
+  - `last_byte` – 服务器接收完整响应时间
+  - `last_byte inflight` – 服务器接收完整响应的时间，考虑请求不完整的情况
+
+  ```shell
+  upstream backend {
+      least_time header;
+      server backend1.example.com;
+      server backend2.example.com;
+  }
+  ```
+
+4. 服务器权重 Server Weights
+
+​	默认的轮询分发请求是根据服务器权重来的，服务器默认权重为1。
+
+```shell
+upstream backend {
+    server backend1.example.com weight=5;
+    server backend2.example.com;
+    server 192.0.0.1 backup;
+}
+```
+
+以上例子中三个服务器，第一个权重为5，第二三个未定义权重参数默认为1，第三个服务器`backup`标记为备用服务器，除非前两个服务器都不可用，否则第三个服务器是不会被分发请求的。因此以上例子，如果有6个请求，则会分给第一个服务器5个，第二个服务器1个。
+
+5. 服务器缓慢启动Server Slow-Start
+
+Slow-Start功能可以防止刚恢复的服务器再次被请求冲击，这样会导致请求超时从而使其再次被标记为不可用。
+
+NGINX Plus中开启Slow-Start功能的服务器，在其恢复后会将其权重从0缓慢增到设定值，如下配置：
+
+```shell
+upstream backend {
+    server backend1.example.com slow_start=30s;
+    server backend2.example.com;
+    server 192.0.0.1 backup;
+}
+```
+
+30s是将请求分发从0到恢复最大连接数的时间。
+
+如果只有一台服务器，[`max_fails`](https://nginx.org/en/docs/http/ngx_http_upstream_module.html#max_fails), [`fail_timeout`](https://nginx.org/en/docs/http/ngx_http_upstream_module.html#fail_timeout), and [`slow_start`](https://nginx.org/en/docs/http/ngx_http_upstream_module.html#slow_start)参数设定的值将会被忽略，其不会被认为是不可用的。
+
+6. Session持久化
+
+Session持久化可以用来将同一个用户的请求分发到同一个服务器。
+
+NginxPlus支持三种session持久化方式。使用`sticky `指令指定持久化方式。Nginx使用Session持久化使用`hash`或者`ip_hash`。
+
+* Sticky cookie - Nginx Plus 对首次访问的请求添加cookie，并标记响应其请求的服务器。接下来的请求会匹配cookie从而分发请求到cookie对应标记的服务器。
+
+  ```shell
+  upstream backend {
+      server backend1.example.com;
+      server backend2.example.com;
+      sticky cookie srv_id expires=1h domain=.example.com path=/;
+  }
+  ```
+
+  srv_id是cookie的名字，expires指定cookie的时效为1小时，domain指定域名，path指定cookie存放的路径，以上是最简单的Session持久化方法。
+
+* Sticky route
+
+* Sticky learn
 
 
 
