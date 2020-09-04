@@ -1,6 +1,7 @@
 ---
 title: Nginx
 tags: [Nginx]
+categories: [web服务器]
 date: 2020-08-29 17:30:00
 ---
 # Nginx
