@@ -1,5 +1,5 @@
 ---
-1title: MongoDB(一)
+title: MongoDB(一)
 tags: [DB,MongoDB]
 categories: [DB]
 date: 2020-09-03 17:40:00
@@ -534,7 +534,7 @@ load("/data/db/scripts/myjstest.js")
 2. 命令行参数
 
    * --help 查看命令行参数信息
-  ![image-20200915185414200](/img/mongodb/image-20200915185414200.png)
+    ![image-20200915185414200](/img/mongodb/image-20200915185414200.png)
    
      ![image-20200915185454123](/img/mongodb/image-20200915185454123.png)
    
