@@ -28,6 +28,7 @@ date: 2020-09-18 17:30:00
               return new int[2];
           }
       }
+   题解：遍历nums，根据输入的target，算出应该目标值target - nums[i]，将算出的值存到HashMap（值为key,下标为value）中，存之前先去map中取，存在则结束，否则将计算的目标值存起来。由于HashMap查询复杂度为O(1)，所以用HashMap来做容器。
    ```
 2. 两数相加
 
@@ -59,8 +60,8 @@ date: 2020-09-18 17:30:00
               while(p != null || q != null){
                   int x = (p != null) ? p.val : 0;
                   int y = (q != null) ? q.val : 0;
-                  int sum = (x + y + carry);
-                  carry = sum / 10;
+                  int sum = (x + y + carry); // 两数相同位数相加，carry为是否有进位情况 上一轮循环也就是低位产生的进位值
+                  carry = sum / 10;// 满十进一 进位的值 
                   curr.next = new ListNode(sum % 10);
                   curr = curr.next;
                   p = (p != null) ? p.next : null;
@@ -72,6 +73,7 @@ date: 2020-09-18 17:30:00
               return header.next;
           }
       }
+   题解：两数相加，注意满十进一，以及ListNode遍历即可。此方法为循环求解。
    ```
 
    ```java
@@ -135,10 +137,30 @@ date: 2020-09-18 17:30:00
         *      请注意，你的答案必须是 子串 的长度，"pwke" 是一个子序列，不是子串。
         *
         */
+   	public int lengthOfLongestSubstring(String s) {
+        char[] chars = s.toCharArray();
+           int res = 0,curr = 0,index = 0, strLength = chars.length;
+           for (int i = index; i < strLength; i++) {
+               for (int j = index; j < i; j++) {
+                   if (chars[i] == chars[j]) {
+                       index++;
+                       i = index;
+                       j = index;
+                       res = Math.max(res,curr);
+                       curr = 0;
+                   }
+               }
+               curr++;
+           }
+           res = Math.max(res,curr);
+           return res;
+       }
+   题解：'abcabcdbca' ->
+       从左到右遍历，每拿到一个char都与之前的遍历过的char进行比较，如果有重复，那么从重复的元素，重新开始遍历。
    ```
-
+   
    
 
 
 
-	
+​	
