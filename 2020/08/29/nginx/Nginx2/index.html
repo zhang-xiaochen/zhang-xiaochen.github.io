@@ -1,0 +1,696 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  <title>Nginx--HTTP负载均衡 - 方寸山</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/tomorrow.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_6peoq002giu.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.0.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>方寸山</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container page-header text-center fade-in-up">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-08-29 17:30" pubdate>
+      2020年8月29日 下午
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.7k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      31
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto" id="post">
+            <!-- SEO header -->
+            <h1 style="display: none">Nginx--HTTP负载均衡</h1>
+            
+            <div class="markdown-body" id="post-body">
+              <h2 id="HTTP负载均衡"><a href="#HTTP负载均衡" class="headerlink" title="HTTP负载均衡"></a>HTTP负载均衡</h2><h3 id="http-中定义-upstream-upstream-中定义server"><a href="#http-中定义-upstream-upstream-中定义server" class="headerlink" title="http 中定义 upstream , upstream 中定义server"></a>http 中定义 upstream , upstream 中定义server</h3><pre><code class="hljs shell">upstream backend &#123;
+    server backend1.example.com weight=5;
+    server 127.0.0.1:8080       max_fails=3 fail_timeout=30s;
+    server unix:/tmp/backend3;
+
+    server backup1.example.com  backup;
+&#125;</code></pre>
+
+<ul>
+<li>upstream -&gt; 定义一组servers监听不同的端口，监听TCP和UNIX-domain sockets (<a target="_blank" rel="noopener" href="http://unix/tmp/backend.socket:/uri/">http://unix:/tmp/backend.socket:/uri/</a>) 可以混合使用。默认情况下使用轮巡方式进行负载均衡，如上example，根据权重不同，每7个请求会有5个请求分发在backend1.example.com服务器上，另外两个请求分给其他的服务器。</li>
+</ul>
+<h3 id="http-中定义虚拟服务器-server"><a href="#http-中定义虚拟服务器-server" class="headerlink" title="http 中定义虚拟服务器 server"></a>http 中定义虚拟服务器 server</h3><pre><code class="hljs shell">server &#123;
+    location / &#123;
+        proxy_pass http://backend;
+    &#125;
+&#125;</code></pre>
+
+<ul>
+<li>proxy_pass -&gt; 设置代理服务器的协议和地址，可以指定<code>http</code>和<code>https</code>协议，地址可以为域名或者IP地址，端口可选</li>
+</ul>
+<p>其他可用相似参数：</p>
+<ul>
+<li><p>fastcgi_pass -&gt; 设置FastCGI服务器，地址由域名或IP以及端口号组成</p>
+</li>
+<li><p>memcached_pass -&gt; 设置缓存服务器，地址由域名或IP以及端口号组成</p>
+</li>
+<li><p>scgi_pass -&gt; 设置SCGI 服务器，地址由域名或IP以及端口号组成</p>
+</li>
+<li><p>uwsgi_pass -&gt; 设置uwsgi服务器，地址由域名或IP以及端口号组成。协议可以指定<code>uwsgi</code>或<code>suwsgi</code></p>
+</li>
+</ul>
+<h3 id="负载均衡方式"><a href="#负载均衡方式" class="headerlink" title="负载均衡方式"></a>负载均衡方式</h3><ul>
+<li><p>Round Robin（轮询）默认方式，根据<code>权重</code>在服务器之间均匀分发请求。</p>
+<pre><code class="hljs shell">upstream backend &#123;
+<span class="hljs-meta">   #</span><span class="bash"> no load balancing method is specified <span class="hljs-keyword">for</span> Round Robin</span>
+ server backend1.example.com;
+ server backend2.example.com;
+&#125;</code></pre>
+</li>
+<li><p>Least Connections 将请求发送到<code>最少数量的活动链接</code>的服务器,同时考虑服务器<code>权重</code>。</p>
+<pre><code class="hljs shell">upstream backend &#123;
+  least_conn;
+  server backend1.example.com;
+  server backend2.example.com;
+&#125;</code></pre>
+</li>
+<li><p>IP Hash 根据客户端IP地址确定向其发送请求的服务器。 在这种情况下，可以使用<code>IPv4地址的前三个八位字节</code>或<code>整个IPv6地址</code>来计算哈希值。 该方法保证了<code>来自相同地址的请求将到达同一服务器</code>，除非该请求不可用。</p>
+<pre><code class="hljs shell">upstream backend &#123;
+  ip_hash;
+  server backend1.example.com;
+  server backend2.example.com;
+&#125;</code></pre>
+
+<p>如果其中一台服务器需要暂时从负载平衡循环中删除，则可以使用<code>down</code>参数对其进行标记，以保留客户端IP地址的当前哈希值。 该服务器要处理的请求将自动发送到组中的下一个服务器：</p>
+<pre><code class="hljs shell">upstream backend &#123;
+  server backend1.example.com;
+  server backend2.example.com;
+  server backend3.example.com down;
+&#125;</code></pre>
+</li>
+<li><p>Generic Hash 根据用户自定义key计算hash值，从而分发服务。key可以是字符串、变量或者两者组合。</p>
+<pre><code class="hljs shell">upstream backend &#123;
+  hash $request_uri consistent;
+  server backend1.example.com;
+  server backend2.example.com;
+&#125;</code></pre>
+
+<p>使用<code>consistent</code>参数启用<code>Ketama</code>一致性哈希算法。如果修改缓存中的服务器映射，这种方式只会有少数的密钥-&gt;服务器关系重新映射，从而减少缓存丢失。</p>
+</li>
+<li><p>Random 请求会随机分发。如果指定<code>two</code>这个参数，那么会首先根据权重选则两个服务器，然后根据指定的以下方法进行请求分发。</p>
+<ul>
+<li><code>least_conn</code> – 活动链接数最少</li>
+<li><code>least_time=header</code> (NGINX Plus) – 服务器返回响应头平均的最小时间(<a target="_blank" rel="noopener" href="https://nginx.org/en/docs/http/ngx_http_upstream_module.html#var_upstream_header_time"><code>$upstream_header_time</code></a>)</li>
+<li><code>least_time=last_byte</code> (NGINX Plus) – 服务器接收完整响应的平均最小时间 (<a target="_blank" rel="noopener" href="https://nginx.org/en/docs/http/ngx_http_upstream_module.html#var_upstream_response_time"><code>$upstream_response_time</code></a>)</li>
+</ul>
+<pre><code class="hljs shell">upstream backend &#123;
+  random two least_time=last_byte;
+  server backend1.example.com;
+  server backend2.example.com;
+  server backend3.example.com;
+  server backend4.example.com;
+&#125;</code></pre>
+
+<p>Random负载均衡适用于分布式系统，其会将请求在后台的指定服务的一组服务器中随机分发。如果是其他明确后台服务具体服务器的系统，应该使用其他方法，round robin(轮询)、laest connections(最少链接)或 least time(最少时间)。</p>
+<blockquote>
+<p>除了Round Robin，其他负载均衡方法要放在 upstream{}块中其他命令之前。</p>
+</blockquote>
+</li>
+<li><p>Least Time （plus才有）对于每个请求，NGINX Plus选择平均延迟最低和活动连接数量最低的服务器，其中最低平均延迟是根据<code>least_time</code>指定的配置参数计算的。<code>last_time</code>取值如下：</p>
+<ul>
+<li><code>header</code> – 服务器接收第一个字节的时间</li>
+<li><code>last_byte</code> – 服务器接收完整响应时间</li>
+<li><code>last_byte inflight</code> – 服务器接收完整响应的时间，考虑请求不完整的情况</li>
+</ul>
+<pre><code class="hljs shell">upstream backend &#123;
+  least_time header;
+  server backend1.example.com;
+  server backend2.example.com;
+&#125;</code></pre>
+
+</li>
+</ul>
+<h3 id="服务器权重-Server-Weights"><a href="#服务器权重-Server-Weights" class="headerlink" title="服务器权重 Server Weights"></a>服务器权重 Server Weights</h3><p>​    默认的轮询分发请求是根据服务器权重来的，服务器默认权重为1。</p>
+<pre><code class="hljs shell">upstream backend &#123;
+    server backend1.example.com weight=5;
+    server backend2.example.com;
+    server 192.0.0.1 backup;
+&#125;</code></pre>
+
+<p>以上例子中三个服务器，第一个权重为5，第二三个未定义权重参数默认为1，第三个服务器<code>backup</code>标记为备用服务器，除非前两个服务器都不可用，否则第三个服务器是不会被分发请求的。因此以上例子，如果有6个请求，则会分给第一个服务器5个，第二个服务器1个。</p>
+<h3 id="服务器缓慢启动Server-Slow-Start"><a href="#服务器缓慢启动Server-Slow-Start" class="headerlink" title="服务器缓慢启动Server Slow-Start"></a>服务器缓慢启动Server Slow-Start</h3><p>Slow-Start功能可以防止刚恢复的服务器再次被请求冲击，这样会导致请求超时从而使其再次被标记为不可用。</p>
+<p>NGINX Plus中开启Slow-Start功能的服务器，在其恢复后会将其权重从0缓慢增到设定值，如下配置：</p>
+<pre><code class="hljs shell">upstream backend &#123;
+    server backend1.example.com slow_start=30s;
+    server backend2.example.com;
+    server 192.0.0.1 backup;
+&#125;</code></pre>
+
+<p>30s是将请求分发从0到恢复最大连接数的时间。</p>
+<p>如果只有一台服务器，<a target="_blank" rel="noopener" href="https://nginx.org/en/docs/http/ngx_http_upstream_module.html#max_fails"><code>max_fails</code></a>, <a target="_blank" rel="noopener" href="https://nginx.org/en/docs/http/ngx_http_upstream_module.html#fail_timeout"><code>fail_timeout</code></a>, and <a target="_blank" rel="noopener" href="https://nginx.org/en/docs/http/ngx_http_upstream_module.html#slow_start"><code>slow_start</code></a>参数设定的值将会被忽略，其不会被认为是不可用的。</p>
+<h3 id="Session持久化"><a href="#Session持久化" class="headerlink" title="Session持久化"></a>Session持久化</h3><p>Session持久化可以用来将同一个用户的请求分发到同一个服务器。</p>
+<p>NginxPlus支持三种session持久化方式。使用<code>sticky </code>指令指定持久化方式。Nginx的Session持久化方式，通过<code>hash</code>或者<code>ip_hash</code>来实现。</p>
+<ul>
+<li><p>Sticky cookie - Nginx Plus 对首次访问的请求添加cookie，并标记响应其请求的服务器。接下来的请求会匹配cookie从而分发请求到cookie对应标记的服务器。</p>
+<pre><code class="hljs shell">upstream backend &#123;
+  server backend1.example.com;
+  server backend2.example.com;
+  sticky cookie srv_id expires=1h domain=.example.com path=/;
+&#125;</code></pre>
+
+<p>srv_id是cookie的名字，expires指定cookie的时效为1小时，domain指定域名，path指定cookie存放的路径，以上是最简单的Session持久化方法。</p>
+</li>
+<li><p>Sticky route<br>Nginx Plus 在第一次接收到客户端的请求的时候会为其指定一个路由，后续的请求会与服务器的路由参数比较，从而分发到正确的代理服务器，路由信息是从<code>cookie</code>或者<code>uri</code>中获取的。</p>
+<pre><code class="hljs shell">upstream backend &#123;
+  server backend1.example.com route=a;
+  server backend2.example.com route=b;
+  sticky route $route_cookie $route_uri;
+&#125;</code></pre>
+
+
+
+</li>
+</ul>
+<ul>
+<li><p>Sticky learn</p>
+<pre><code class="hljs shell">upstream backend &#123;
+ server backend1.example.com;
+ server backend2.example.com;
+ sticky learn
+     create=$upstream_cookie_examplecookie
+     lookup=$cookie_examplecookie
+     zone=client_sessions:1m
+     timeout=1h;
+&#125;</code></pre>
+
+<p><code>create</code>参数表示如何创建session，示例为根据传来的名为examplecookie的cookie来创建。</p>
+<p><code>lookup</code>参数表示如何查找session，示例为在名为examplecookie中查找session。</p>
+<p><code>zone</code>参数表示session存放的区域名称和大小，示例为区域名为client_session大小为1m。</p>
+<p><code>timeout</code>为session过期时间。</p>
+<p>​        与前两种方式相比较，这种持久化方式要更加复杂一些，因为当前持久化方式不需要客户端存放cookie信息，cookie信息是存放在服务器的共享区域内。</p>
+<p>在集群中session存放的位置是可以共享的，但是要满足以下条件：</p>
+<ul>
+<li>共享存储区域的名字得相同，也就是<code>zone</code>后的参数得一致。</li>
+<li>开启<a target="_blank" rel="noopener" href="https://nginx.org/en/docs/stream/ngx_stream_zone_sync_module.html?&amp;_ga=2.266232719.1684610560.1600414511-39955037.1597994482#zone_sync">zone_sync</a>共享区域同步功能。</li>
+<li>指定<code>sync</code>参数。</li>
+</ul>
+</li>
+</ul>
+<h3 id="限制连接数量"><a href="#限制连接数量" class="headerlink" title="限制连接数量"></a>限制连接数量</h3><p>使用<code>max_conns</code>来指定最大连接数，如果满了，进入队列进行处理。</p>
+<pre><code class="hljs shell">upstream backend &#123;
+    server backend1.example.com max_conns=3;
+    server backend2.example.com;
+    queue 100 timeout=70;
+&#125;</code></pre>
+
+<p>如果队列满了，或者是超时未获得连接，则客户端是会收到错误信息的。</p>
+<blockquote>
+<p>如果其他的工作进程中有打开的<a target="_blank" rel="noopener" href="https://nginx.org/en/docs/http/ngx_http_upstream_module.html?&_ga=2.203866896.1684610560.1600414511-39955037.1597994482#keepalive">keepalive</a>连接，那么max_conns限制会被忽略。因此，多个工作进程共享内存，max_conns是有可能超过指定数量的。</p>
+</blockquote>
+<ol>
+<li><p>多个工作进程间数据共享</p>
+<ul>
+<li><p>如果负载均衡<code>upstream</code>没有指定<code>zone</code>，每个工作进程从服务器组拷贝的<code>配置信息</code>以及<code>相关计数</code>是相互独立的。配置信息将无法动态进行修改。</p>
+</li>
+<li><p>指定<code>zone</code>参数则服务器组的配置信息将不再是每个工作进程独自一份，配置信息会放在共享内存中，这样就可以动态修改配置信息，并同步相关计数。</p>
+</li>
+<li><p><code>健康检查</code>以及<code>动态配置</code>功能的开启是需要指定<code>zone</code>参数的。配置<code>zone</code>参数是比较有用的，生产上不可能一个工作进程去处理请求的。如果当前工作进程挂了，其他工作进程是无法全部立刻知道你挂了（确定挂掉是要在fail_timeout时间内，失败重试的次数必须等于max_fails* 辅助工作进程数量），部分工作线程还是会给你发请求的。</p>
+<p>不指定<code>zone</code>最小连接数（least connections）这种负载均衡方法在低负载下是没法用的。因为计数是独立的，工作进程拿到的是自己保存的计数，一个进程分发完请求给最小活跃连接数的服务器后，服务器活跃连接数变了只有发请求的工作进程知道，其他工作进程是不知道的，可能根据旧的信息，再次给这个服务器分发请求。</p>
+</li>
+<li><p>没有官方推荐的配置，因为大家实际情况不一样请自行设置。</p>
+<blockquote>
+<p>session持久化方式未sticky_route，开启单个健康检查的情况下，256k的内存可以存放的服务器指标：</p>
+<p>128 server 每个服务器定义为 IP地址:端口</p>
+<p>88 server 每个服务器定义为 主机名:端口，主机名解析为单个IP地址</p>
+<p>12 server 每个服务器定义为 主机名:端口，主机名解析为多个IP地址</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p>使用DNS修改HTTP负载均衡的配置<br>服务器组的配置信息可以在运行时使用DNS来修改。根据DNS定时解析域名，自动同步，不需要重启。</p>
+<pre><code class="hljs shell">http &#123;
+ resolver 10.0.0.1 valid=300s ipv6=off;
+ resolver_timeout 10s;
+ server &#123;
+     location / &#123;
+         proxy_pass http://backend;
+     &#125;
+ &#125;
+ upstream backend &#123;
+     zone backend 32k;
+     least_conn;
+     # ...
+     server backend1.example.com resolve;
+     server backend2.example.com resolve;
+ &#125;
+&#125;</code></pre>
+
+<p><code>resolver</code> 指定DNS，valid配置解析IP时间间隔。ipv6=off 只解析ipv4，默认两种都解析。</p>
+<p><code>resolve</code> 指定哪个域名要被解析。<br>如果一个域名被解析为多个IP列表，则会在这些IP列表之间进行负载均衡。并且IP列表改变后，会立即在新的IP列表间进行负载均衡。</p>
+</li>
+</ol>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/web%E6%9C%8D%E5%8A%A1%E5%99%A8/">web服务器</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Nginx/">Nginx</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/09/02/linux/ag/ag/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">ag-命令行查找工具</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/08/29/nginx/Nginx1/">
+                        <span class="hidden-mobile">Nginx--基础入门</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '#post-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "Nginx--HTTP负载均衡&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
