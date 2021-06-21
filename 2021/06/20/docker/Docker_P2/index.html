@@ -228,7 +228,7 @@ CMD [&quot;nginx&quot;, &quot;-g&quot;, &quot;daemon off;&quot;]</code></pre>
 <ul>
 <li><p>每一个Dockerfile都以<code>FROM</code>指令开头。用以指定基础镜像。示例基础镜像为<code>ubuntu:latest</code>，可以在自定义镜像中使用Ubuntu的所有功能。</p>
 </li>
-<li><p><code>EXPOSE</code>表示自定义镜像需要发布的端口。有该指令则在运行容器的时候不需要使用<code>--publish</code>参数发布端口。</p>
+<li><p><code>EXPOSE</code>表示自定义镜像需要发布的端口。仍需要使用<code>--publish</code>参数发布端口与宿主机端口映射。</p>
 </li>
 <li><p><code>RUN</code>在自定义容器内部的Shell中执行命令。<code>apt-get update &amp;&amp; apt-get install nginx -y</code>检查更新软件包版本并安装Nginx。</p>
 <p><code>apt-get clean &amp;&amp; rm -rf /var/lib/apt/lists/*</code>清除程序包缓存。<code>RUN</code>命令是以<code>shell</code>形式编写，此外还有<a target="_blank" rel="noopener" href="https://docs.docker.com/engine/reference/builder/#run">exec</a>。</p>
