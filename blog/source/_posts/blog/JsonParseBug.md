@@ -1,5 +1,6 @@
 ---
 title: Object转Json遇到的坑
+index_img: /img/blog/fastjson.png
 tags: [fastjson]
 categories: [fastjson]
 date: 2021-01-23 21:30:00
