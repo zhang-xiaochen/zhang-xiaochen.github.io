@@ -171,7 +171,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.9k 字
+      3.3k 字
     </span>
   
 
@@ -181,7 +181,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      44
+      49
        分钟
     </span>
   
@@ -253,7 +253,7 @@
 <li>Docker 守护程序根据新拉取的镜像创建一个新容器。</li>
 <li>最后，Docker 守护程序运行使用 <code>hello-world</code> 镜像创建的容器，该镜像在终端上输出文本。</li>
 </ol>
-<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><pre><code class="hljs shell">docker &lt;object&gt; &lt;command&gt; &lt;options&gt;</code></pre>
+<h2 id="Docker容器操作常用命令"><a href="#Docker容器操作常用命令" class="headerlink" title="Docker容器操作常用命令"></a>Docker容器操作常用命令</h2><pre><code class="hljs shell">docker &lt;object&gt; &lt;command&gt; &lt;options&gt;</code></pre>
 
 <ul>
 <li><code>object</code> 表示将要操作的 Docker 对象的类型。这可以是 <code>container</code>、<code>image</code>、<code>network</code> 或者 <code>volume</code> 对象。</li>
@@ -522,6 +522,44 @@ bXktc2VjcmV0</code></pre>
 <pre><code class="hljs shell">➜  ~  sudo docker container run ubuntu uname -a
 Linux e090d6ac7e4b 5.4.72-microsoft-standard-WSL2 #1 SMP Wed Oct 28 23:40:43 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux</code></pre>
 
+<h3 id="处理可执行镜像"><a href="#处理可执行镜像" class="headerlink" title="处理可执行镜像"></a>处理可执行镜像</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/fhsinchy/rmbyext">rmbyext</a>一个递归删除给定扩展名文件的Python脚本。 rmbyext <file extension></p>
+<p><a target="_blank" rel="noopener" href="https://hub.docker.com/r/fhsinchy/rmbyext">fhsinchy/rmbyext</a> 镜像的行为与rmbyext类似。该镜像包含 <code>rmbyext</code> 脚本的副本，并配置为在容器内的目录 <code>/zone</code>上运行该脚本。</p>
+<p>现在的问题是容器与本地系统隔离，因此在容器内运行的 <code>rmbyext</code> 程序无法访问本地文件系统。因此，如果可以通过某种方式将包含 pdf 文件的本地目录映射到容器内的 <code>/zone</code> 目录，则容器应该可以访问这些文件。</p>
+<p>授予容器直接访问本地文件系统的一种方法是使用<a target="_blank" rel="noopener" href="https://docs.docker.com/storage/bind-mounts/">绑定挂载</a>。</p>
+<p>绑定挂载可以在本地文件系统目录（源）与容器内另一个目录（目标）之间形成双向数据绑定。这样，在目标目录中进行的任何更改都将在源目录上生效，反之亦然。</p>
+</blockquote>
+<p>为容器创建绑定挂载</p>
+<pre><code class="hljs shell">-v 或 --volume
+--volume &lt;local file system directory absolute path&gt;:&lt;container file system directory absolute path&gt;:&lt;read write access&gt;</code></pre>
+
+<p>挂载本地目录使用<a target="_blank" rel="noopener" href="https://hub.docker.com/r/fhsinchy/rmbyext">fhsinchy/rmbyext</a> 镜像的删除功能</p>
+<pre><code class="hljs shell">➜  test  ls
+t1.txt  t2.pdf  t3.jpg  t4.txt
+➜  test  sudo docker container run --rm -v $(pwd):/zone fhsinchy/rmbyext pdf
+Unable to find image &#x27;fhsinchy/rmbyext:latest&#x27; locally
+latest: Pulling from fhsinchy/rmbyext
+801bfaa63ef2: Pull complete
+8723b2b92bec: Pull complete
+4e07029ccd64: Pull complete
+594990504179: Pull complete
+140d7fec7322: Pull complete
+23038161e8da: Pull complete
+0b40a42464a5: Pull complete
+Digest: sha256:58969069a70a7f9b29be83abd1465cf10c568049c9d183e9d7a7d8726d074048
+Status: Downloaded newer image for fhsinchy/rmbyext:latest
+Removing: PDF
+t2.pdf
+
+➜  test  ls
+delete_log.log  t1.txt  t3.jpg  t4.txt
+➜  test  cat delete_log.log
+t2.pdf
+1 FILES DELETED.
+➜  test</code></pre>
+
+
+
 
 
 
@@ -553,6 +591,12 @@ Linux e090d6ac7e4b 5.4.72-microsoft-standard-WSL2 #1 SMP Wed Oct 28 23:40:43 UTC
                 <div class="post-prevnext row">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2021/06/20/docker/Docker_P2/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Docker_P2</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
