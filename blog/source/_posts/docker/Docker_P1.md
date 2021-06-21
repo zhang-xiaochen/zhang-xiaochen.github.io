@@ -1,5 +1,6 @@
 ---
 title: Docker_P1
+excerpt: 容器、镜像、仓库概述，Docker架构描述以及Docker容器操作常用命令
 tags: [Docker]
 categories: [容器]
 date: 2021-06-12 17:30:00

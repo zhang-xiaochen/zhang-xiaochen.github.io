@@ -1,5 +1,6 @@
 ---
 title: Docker_P2
+excerpt: 创建镜像、标记镜像、删除镜像、镜像分层、优化镜像、创建可执行镜像、在线共享镜像
 tags: [Docker]
 categories: [容器]
 date: 2021-06-20 16:30:00
