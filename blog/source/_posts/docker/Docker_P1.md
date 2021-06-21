@@ -66,7 +66,7 @@ date: 2021-06-12 17:30:00
 5. Docker 守护程序根据新拉取的镜像创建一个新容器。
 6. 最后，Docker 守护程序运行使用 `hello-world` 镜像创建的容器，该镜像在终端上输出文本。
 
-## 常用命令
+## Docker容器操作常用命令
 
 ```shell
 docker <object> <command> <options>
@@ -427,6 +427,55 @@ bXktc2VjcmV0
 ➜  ~  sudo docker container run ubuntu uname -a
 Linux e090d6ac7e4b 5.4.72-microsoft-standard-WSL2 #1 SMP Wed Oct 28 23:40:43 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
 ```
+
+### 处理可执行镜像
+
+> [rmbyext](https://github.com/fhsinchy/rmbyext)一个递归删除给定扩展名文件的Python脚本。 rmbyext <file extension>
+>
+> [fhsinchy/rmbyext](https://hub.docker.com/r/fhsinchy/rmbyext) 镜像的行为与rmbyext类似。该镜像包含 `rmbyext` 脚本的副本，并配置为在容器内的目录 `/zone`上运行该脚本。
+>
+> 现在的问题是容器与本地系统隔离，因此在容器内运行的 `rmbyext` 程序无法访问本地文件系统。因此，如果可以通过某种方式将包含 pdf 文件的本地目录映射到容器内的 `/zone` 目录，则容器应该可以访问这些文件。
+>
+> 授予容器直接访问本地文件系统的一种方法是使用[绑定挂载](https://docs.docker.com/storage/bind-mounts/)。
+>
+> 绑定挂载可以在本地文件系统目录（源）与容器内另一个目录（目标）之间形成双向数据绑定。这样，在目标目录中进行的任何更改都将在源目录上生效，反之亦然。
+
+为容器创建绑定挂载
+
+```shell
+-v 或 --volume
+--volume <local file system directory absolute path>:<container file system directory absolute path>:<read write access>
+```
+
+挂载本地目录使用[fhsinchy/rmbyext](https://hub.docker.com/r/fhsinchy/rmbyext) 镜像的删除功能
+
+```shell
+➜  test  ls
+t1.txt  t2.pdf  t3.jpg  t4.txt
+➜  test  sudo docker container run --rm -v $(pwd):/zone fhsinchy/rmbyext pdf
+Unable to find image 'fhsinchy/rmbyext:latest' locally
+latest: Pulling from fhsinchy/rmbyext
+801bfaa63ef2: Pull complete
+8723b2b92bec: Pull complete
+4e07029ccd64: Pull complete
+594990504179: Pull complete
+140d7fec7322: Pull complete
+23038161e8da: Pull complete
+0b40a42464a5: Pull complete
+Digest: sha256:58969069a70a7f9b29be83abd1465cf10c568049c9d183e9d7a7d8726d074048
+Status: Downloaded newer image for fhsinchy/rmbyext:latest
+Removing: PDF
+t2.pdf
+
+➜  test  ls
+delete_log.log  t1.txt  t3.jpg  t4.txt
+➜  test  cat delete_log.log
+t2.pdf
+1 FILES DELETED.
+➜  test
+```
+
+
 
 
 
