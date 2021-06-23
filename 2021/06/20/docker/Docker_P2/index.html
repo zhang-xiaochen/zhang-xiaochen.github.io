@@ -426,14 +426,7 @@ ebff7392ea65   2 minutes ago    /bin/sh -c #(nop)  EXPOSE 80                    
 <h2 id="如何从源码构建NGINX"><a href="#如何从源码构建NGINX" class="headerlink" title="如何从源码构建NGINX"></a>如何从源码构建NGINX</h2><p>构建步骤：</p>
 <ul>
 <li><p>准备Nginx源代码，<a target="_blank" rel="noopener" href="http://nginx.org/download/">nignx源码下载</a></p>
-<p>&lt;!–hexoPostRenderEscape:<pre><code class="hljs shell">➜  nginxTest  wget <a target="_blank" rel="noopener" href="http://nginx.org/download/nginx-1.19.9.tar.gz">http://nginx.org/download/nginx-1.19.9.tar.gz</a></p>
 </li>
-</ul>
-<p>–2021-06-23 21:09:50–  <a target="_blank" rel="noopener" href="http://nginx.org/download/nginx-1.19.9.tar.gz">http://nginx.org/download/nginx-1.19.9.tar.gz</a><br>Connecting to 172.25.144.1:8889… connected.<br>Proxy request sent, awaiting response… ^[[B200 OK<br>Length: 1060580 (1.0M) [application/octet-stream]<br>Saving to: ‘nginx-1.19.9.tar.gz’</p>
-<p>nginx-1.19.9.tar.gz         100%[=========================================&gt;]   1.01M   398KB/s    in 2.6s</p>
-<p>2021-06-23 21:09:54 (398 KB/s) - ‘nginx-1.19.9.tar.gz’ saved [1060580/1060580]</p>
-<p>➜  nginxTest  ls<br>nginx-1.19.9.tar.gz</code></pre>:hexoPostRenderEscape–&gt;</p>
-<ul>
 <li><p>获得用于构建应用程序的基础镜像，例如 <a target="_blank" rel="noopener" href="https://hub.docker.com/_/ubuntu">ubuntu</a>。</p>
 </li>
 <li><p>在基础镜像上安装必要的构建依赖项。</p>
@@ -449,6 +442,21 @@ ebff7392ea65   2 minutes ago    /bin/sh -c #(nop)  EXPOSE 80                    
 <li><p>运行<code>nginx</code>可执行文件。</p>
 </li>
 </ul>
+<p>下载源码：</p>
+<pre><code class="hljs shell">➜  nginxTest  wget http://nginx.org/download/nginx-1.19.9.tar.gz
+--2021-06-23 21:09:50--  http://nginx.org/download/nginx-1.19.9.tar.gz
+Connecting to 172.25.144.1:8889... connected.
+Proxy request sent, awaiting response... ^[[B200 OK
+Length: 1060580 (1.0M) [application/octet-stream]
+Saving to: ‘nginx-1.19.9.tar.gz’
+
+nginx-1.19.9.tar.gz         100%[=========================================&gt;]   1.01M   398KB/s    in 2.6s
+
+2021-06-23 21:09:54 (398 KB/s) - ‘nginx-1.19.9.tar.gz’ saved [1060580/1060580]
+
+➜  nginxTest  ls
+nginx-1.19.9.tar.gz</code></pre>
+
 <p>根据以上步骤创建Dockerfile如下：</p>
 <pre><code class="hljs shell">FROM ubuntu:latest
 RUN apt-get update &amp;&amp; \
