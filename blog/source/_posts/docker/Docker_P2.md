@@ -281,35 +281,31 @@ ebff7392ea65   2 minutes ago    /bin/sh -c #(nop)  EXPOSE 80                    
 
 * 准备Nginx源代码，[nignx源码下载](http://nginx.org/download/)
 
-  ```shell
-  ➜  nginxTest  wget http://nginx.org/download/nginx-1.19.9.tar.gz
-  --2021-06-23 21:09:50--  http://nginx.org/download/nginx-1.19.9.tar.gz
-  Connecting to 172.25.144.1:8889... connected.
-  Proxy request sent, awaiting response... ^[[B200 OK
-  Length: 1060580 (1.0M) [application/octet-stream]
-  Saving to: ‘nginx-1.19.9.tar.gz’
-  
-  nginx-1.19.9.tar.gz         100%[=========================================>]   1.01M   398KB/s    in 2.6s
-  
-  2021-06-23 21:09:54 (398 KB/s) - ‘nginx-1.19.9.tar.gz’ saved [1060580/1060580]
-  
-  ➜  nginxTest  ls
-  nginx-1.19.9.tar.gz
-  ```
-
 * 获得用于构建应用程序的基础镜像，例如 [ubuntu](https://hub.docker.com/_/ubuntu)。
-
 * 在基础镜像上安装必要的构建依赖项。
-
 * 复制 `nginx-1.19.9.tar.gz` 文件到镜像里。
-
 * 解压缩压缩包的内容并删除压缩包。
-
 * 使用 `make` 工具配置构建，编译和安装程序。
-
 * 删除解压缩的源代码。
-
 * 运行`nginx`可执行文件。
+
+下载源码：
+
+```shell
+➜  nginxTest  wget http://nginx.org/download/nginx-1.19.9.tar.gz
+--2021-06-23 21:09:50--  http://nginx.org/download/nginx-1.19.9.tar.gz
+Connecting to 172.25.144.1:8889... connected.
+Proxy request sent, awaiting response... ^[[B200 OK
+Length: 1060580 (1.0M) [application/octet-stream]
+Saving to: ‘nginx-1.19.9.tar.gz’
+
+nginx-1.19.9.tar.gz         100%[=========================================>]   1.01M   398KB/s    in 2.6s
+
+2021-06-23 21:09:54 (398 KB/s) - ‘nginx-1.19.9.tar.gz’ saved [1060580/1060580]
+
+➜  nginxTest  ls
+nginx-1.19.9.tar.gz
+```
 
 根据以上步骤创建Dockerfile如下：
 
