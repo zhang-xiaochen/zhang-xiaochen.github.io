@@ -1,5 +1,6 @@
 ---
 title: ag-命令行查找工具
+index_img: /img/linux/ag/silversearcher-ag.png
 tags: [Linux,ag]
 categories: [Linux]
 date: 2020-09-02 17:30:00

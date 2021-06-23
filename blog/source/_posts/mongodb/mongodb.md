@@ -1,5 +1,6 @@
 ---
 title: MongoDB(一)
+index_img: /img/mongodb/mongodb.png
 tags: [DB,MongoDB]
 categories: [DB]
 date: 2020-09-03 17:40:00
@@ -247,13 +248,13 @@ MongoDB有两个版本，社区版和企业版。（以下使用ubuntu社区版�
    对prompt进行设置，可以是字符串或者是JavaScript代码。可以在当前mongo shell中设置 也可以在`/etc/mongorc.js`文件中进行设置。
 
    * 显示行号
-   ![image-20200915181642262](/img/mongodb/image-20200915181642262.png)
+     ![image-20200915181642262](/img/mongodb/image-20200915181642262.png)
      
    * 显示db和hostname
-   ![image-20200915181715722](/img/mongodb/image-20200915181715722.png)
+     ![image-20200915181715722](/img/mongodb/image-20200915181715722.png)
      
    * 显示系统正常运行时间和当前文档数量
-   ![image-20200915181738149](/img/mongodb/image-20200915181738149.png)
+     ![image-20200915181738149](/img/mongodb/image-20200915181738149.png)
    
        
    

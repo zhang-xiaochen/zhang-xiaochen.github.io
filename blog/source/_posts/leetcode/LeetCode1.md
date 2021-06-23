@@ -1,5 +1,6 @@
 ---
 title: LeetCode(一)
+index_img: /img/leetcode/leetcode.png
 tags: [LeetCode]
 categories: [算法]
 date: 2020-09-18 17:30:00

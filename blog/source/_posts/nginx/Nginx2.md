@@ -1,5 +1,6 @@
 ---
 title: Nginx--HTTP负载均衡
+index_img: /img/Nginx.assets/nginx.png
 tags: [Nginx]
 categories: [web服务器]
 date: 2020-08-29 17:30:00

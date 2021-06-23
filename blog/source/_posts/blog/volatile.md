@@ -1,5 +1,6 @@
 ---
 title: volatile关键字使用指南
+index_img: /img/volatile/volatile.png
 tags: [volatile]
 categories: [并发编程]
 date: 2021-03-27 15:30:00
