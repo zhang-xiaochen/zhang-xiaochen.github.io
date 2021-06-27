@@ -13,7 +13,7 @@ date: 2021-06-20 16:30:00
 
 使用DockerFile文件创建镜像，Dockerfile是创建镜像的指令集。如下是一个简单的Nginx镜像的Dockerfile文件。
 
-```tex
+```dockerfile
 FROM ubuntu:latest
 
 EXPOSE 80
@@ -309,7 +309,7 @@ nginx-1.19.9.tar.gz
 
 根据以上步骤创建Dockerfile如下：
 
-```shell
+```dockerfile
 FROM ubuntu:latest
 RUN apt-get update && \
     apt-get install build-essential\ 
@@ -384,7 +384,7 @@ Successfully tagged custom-nginx:built
 
 优化Dockerfile如下：
 
-```shell
+```dockerfile
 FROM ubuntu:latest
 RUN apt-get update && \
     apt-get install build-essential\ 
@@ -477,7 +477,7 @@ fhsinchy/rmbyext      latest     90eafb66c390   5 months ago        50.9MB
 
 查看构建镜像的Dockerfile
 
-```shell
+```dockerfile
 FROM ubuntu:latest
 RUN apt-get update && \
     apt-get install build-essential\ 
@@ -518,7 +518,7 @@ RUN apt-get update && \
 
 优化Dockerfile如下：
 
-```shell
+```dockerfile
 FROM ubuntu:latest
 
 EXPOSE 80
@@ -618,5 +618,136 @@ fhsinchy/rmbyext      latest     90eafb66c390   5 months ago     50.9MB
 
 > custom-nginx:built 359MB -> custom-nginx:built2 84.1MB
 
+## Alpine Linux
 
+Apline Linux 是一个功能完毕的Linux发行版，因为其更加轻量级镜像仅为2.8MB，并且比较安全，更适合创建容器。
+
+以Alpine Linux为基础构建custom-nginx:
+
+```dockerfile
+FROM alpine:latest
+
+EXPOSE 80
+
+ARG FILENAME="nginx-1.19.2"
+ARG EXTENSION="tar.gz"
+
+ADD https://nginx.org/download/${FILENAME}.${EXTENSION} .
+
+RUN apk add --no-cache pcre zlib && \
+    apk add --no-cache \
+            --virtual .build-deps \
+            build-base \ 
+            pcre-dev \
+            zlib-dev \
+            openssl-dev && \
+    tar -xvf ${FILENAME}.${EXTENSION} && rm ${FILENAME}.${EXTENSION} && \
+    cd ${FILENAME} && \
+    ./configure \
+        --sbin-path=/usr/bin/nginx \
+        --conf-path=/etc/nginx/nginx.conf \
+        --error-log-path=/var/log/nginx/error.log \
+        --http-log-path=/var/log/nginx/access.log \
+        --with-pcre \
+        --pid-path=/var/run/nginx.pid \
+        --with-http_ssl_module && \
+    make && make install && \
+    cd / && rm -rfv /${FILENAME} && \
+    apk del .build-deps
+
+CMD ["nginx", "-g", "daemon off;"]
+```
+
+与Ubuntu不同的是包管理器不是apt-get，而是apk。
+
+* `--no-cache`下载的软件包将不被缓存。
+
+* `--virtual`将一堆软件包捆绑到单个`虚拟`软件包中。
+* 软件包在不同发行版的名称可能不同，可以到指定发行版的仓库进行搜索。 [Alpine Linux软件包](https://pkgs.alpinelinux.org/packages)
+
+看看效果
+
+```shell
+➜  alpine_linux  sudo docker images
+REPOSITORY            TAG        IMAGE ID       CREATED          SIZE
+custom-nginx          alphine    168baac68146   50 seconds ago   12.2MB
+custom-nginx          built2     592d52212ef2   4 days ago       84.1MB
+custom-nginx          built      8ea7b598f205   4 days ago       359MB
+custom-nginx          packaged   b11ac2f129e6   4 days ago       132MB
+ubuntu                latest     9873176a8ff5   9 days ago       72.7MB
+alpine                latest     d4ff818577bc   11 days ago      5.6MB
+busybox               latest     69593048aa3a   2 weeks ago      1.24MB
+node                  latest     d1b3088a17b1   3 weeks ago      908MB
+nginx                 latest     d1a364dc548d   4 weeks ago      133MB
+fhsinchy/hello-dock   latest     f540930e8157   5 months ago     21.9MB
+fhsinchy/rmbyext      latest     90eafb66c390   5 months ago     50.9MB
+```
+
+Ubuntu 84.1MB -> Alpine Linux 12.2MB
+
+## 创建可执行镜像
+
+创建rmbyext可执行镜像
+
+```dockerfile
+FROM python:3-alpine
+
+WORKDIR /zone
+
+RUN apk add --no-cache git && \
+    pip install git+https://github.com/fhsinchy/rmbyext.git
+    apk del git
+
+ENTRYPOINT [ "rmbyext" ]
+```
+
+* rmbyext是python脚本，基础镜像要是能执行python的环境。
+* `WORKDIR`指定工作目录，`zone`一个随机的名字。
+* `apk add --no-cache git && pip install git+https://github.com/fhsinchy/rmbyext.git && apk del git`下git，用git下载rmbyext脚本，然后删除git。
+* `ENTRYPOINT`将`rmbyext`脚本设置为镜像入口。
+
+>exec模式： 容器中的任务进程就是容器内的 1 号进程，exec 模式是建议的使用模式，因为当运行任务的进程作为容器中的 1 号进程时，我们可以通过 docker 的 stop 命令优雅的结束容器。exec 模式的特点是不会通过 shell 执行相关的命令，所以像 $HOME 这样的环境变量是取不到的。
+>
+> shell 模式：会先执行`/bin/sh -c`，然后执行任务，`/bin/sh -c`为1号进程。
+>
+>CMD指令：
+>
+>* CMD 指令的目的是为容器提供默认的执行命令。
+>* CMD 指令有三种使用方式，其中的一种是为 ENTRYPOINT 提供默认的参数：
+>  * CMD ["param1","param2"]
+>    另外两种使用方式分别是 exec 模式和 shell 模式：
+>  * CMD ["executable","param1","param2"]  // 这是 exec 模式的写法，注意需要使用双引号。
+>  * CMD command param1 param2        // 这是 shell 模式的写法。
+>* 注意命令行参数可以覆盖 CMD 指令的设置，但是只能是重写，却不能给 CMD 中的命令通过命令行传递参数。
+>* 一般的镜像都会提供容器启动时的默认命令，但是有些场景中用户并不想执行默认的命令。用户可以通过命令行参数的方式覆盖 CMD 指令提供的默认命令。
+>
+>ENTRYPOINT 指令：
+>
+>* ENTRYPOINT 指令的目的也是为容器指定默认执行的任务。
+>
+>* ENTRYPOINT 指令有两种使用方式，就是我们前面介绍的 exec 模式和 shell 模式：
+>
+>  * ENTRYPOINT ["executable", "param1", "param2"]  // 这是 exec 模式的写法，注意需要使用双引号
+>  * ENTRYPOINT command param1 param2        // 这是 shell 模式的写法。
+>    exec 模式和 shell 模式的基本用法和 CMD 指令是一样的，下面我们介绍一些比较特殊的用法。
+>
+>* 指定 ENTRYPOINT 指令为 exec 模式时，命令行上指定的参数会作为参数添加到 ENTRYPOINT 指定命令的参数列表中。
+>
+>* 以下面的Dockerfile构建镜像
+>
+>  ```dockerfile
+>  FROM ubuntu
+>  ENTRYPOINT [ "top", "-b" ]
+>  ```
+>
+>  执行`docker run --rm <container name> -c` 则命令`-c`会被添加到`top -b`后面，容器实际执行的命令为`top -b -c`。
+>
+>  CMD命令则不会，以下面的Dockerfile构建镜像
+>
+>  ```dockerfile
+>  FROM ubuntu
+>  CMD [ "top", "-b" ]
+>  ```
+>
+>  执行`docker run --rm <container name> -c` ,容器实际执行的命令为`top -b`。
 
