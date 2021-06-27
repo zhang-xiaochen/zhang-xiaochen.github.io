@@ -171,7 +171,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      4.1k 字
+      5.2k 字
     </span>
   
 
@@ -181,7 +181,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      69
+      85
        分钟
     </span>
   
@@ -215,15 +215,15 @@
             
             <div class="markdown-body" id="post-body">
               <h1 id="Docker-P2"><a href="#Docker-P2" class="headerlink" title="Docker_P2"></a>Docker_P2</h1><h2 id="如何创建Docker镜像"><a href="#如何创建Docker镜像" class="headerlink" title="如何创建Docker镜像"></a>如何创建Docker镜像</h2><p>使用DockerFile文件创建镜像，Dockerfile是创建镜像的指令集。如下是一个简单的Nginx镜像的Dockerfile文件。</p>
-<pre><code class="hljs tex">FROM ubuntu:latest
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> ubuntu:latest
 
-EXPOSE 80
+<span class="hljs-keyword">EXPOSE</span> <span class="hljs-number">80</span>
 
-RUN apt-get update &amp;&amp; <span class="hljs-tag">\</span>
-    apt-get install nginx -y &amp;&amp; <span class="hljs-tag">\</span>
-    apt-get clean &amp;&amp; rm -rf /var/lib/apt/lists/*
+<span class="hljs-keyword">RUN</span><span class="bash"> apt-get update &amp;&amp; \</span>
+<span class="bash">    apt-get install nginx -y &amp;&amp; \</span>
+<span class="bash">    apt-get clean &amp;&amp; rm -rf /var/lib/apt/lists/*</span>
 
-CMD [&quot;nginx&quot;, &quot;-g&quot;, &quot;daemon off;&quot;]</code></pre>
+<span class="hljs-keyword">CMD</span><span class="bash"> [<span class="hljs-string">&quot;nginx&quot;</span>, <span class="hljs-string">&quot;-g&quot;</span>, <span class="hljs-string">&quot;daemon off;&quot;</span>]</span></code></pre>
 
 <ul>
 <li><p>每一个Dockerfile都以<code>FROM</code>指令开头。用以指定基础镜像。示例基础镜像为<code>ubuntu:latest</code>，可以在自定义镜像中使用Ubuntu的所有功能。</p>
@@ -458,9 +458,9 @@ nginx-1.19.9.tar.gz         100%[=========================================&gt;] 
 nginx-1.19.9.tar.gz</code></pre>
 
 <p>根据以上步骤创建Dockerfile如下：</p>
-<pre><code class="hljs shell">FROM ubuntu:latest
-RUN apt-get update &amp;&amp; \
-    apt-get install build-essential\ 
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> ubuntu:latest
+<span class="hljs-keyword">RUN</span><span class="bash"> apt-get update &amp;&amp; \</span>
+<span class="bash">    apt-get install build-essential\ </span>
                     libpcre3 \
                     libpcre3-dev \
                     zlib1g \
@@ -468,20 +468,20 @@ RUN apt-get update &amp;&amp; \
                     libssl-dev \
                     -y &amp;&amp; \
     apt-get clean &amp;&amp; rm -rf /var/lib/apt/lists/*
-COPY nginx-1.19.9.tar.gz .\
-RUN tar -xvf nginx-1.19.9.tar.gz &amp;&amp; rm nginx-1.19.9.tar.gz
-RUN cd nginx-1.19.9 &amp;&amp; \
-    ./configure \
-        --sbin-path=/usr/bin/nginx \
-        --conf-path=/etc/nginx/nginx.conf \
-        --error-log-path=/var/log/nginx/error.log \
-        --http-log-path=/var/log/nginx/access.log \
-        --with-pcre \
-        --pid-path=/var/run/nginx.pid \
-        --with-http_ssl_module &amp;&amp; \
-    make &amp;&amp; make install
-RUN rm -rf /nginx-1.19.9
-CMD [&quot;nginx&quot;, &quot;-g&quot;, &quot;daemon off;&quot;]</code></pre>
+<span class="hljs-keyword">COPY</span><span class="bash"> nginx-1.19.9.tar.gz .\</span>
+<span class="bash">RUN tar -xvf nginx-1.19.9.tar.gz &amp;&amp; rm nginx-1.19.9.tar.gz</span>
+<span class="hljs-keyword">RUN</span><span class="bash"> <span class="hljs-built_in">cd</span> nginx-1.19.9 &amp;&amp; \</span>
+<span class="bash">    ./configure \</span>
+<span class="bash">        --sbin-path=/usr/bin/nginx \</span>
+<span class="bash">        --conf-path=/etc/nginx/nginx.conf \</span>
+<span class="bash">        --error-log-path=/var/<span class="hljs-built_in">log</span>/nginx/error.log \</span>
+<span class="bash">        --http-log-path=/var/<span class="hljs-built_in">log</span>/nginx/access.log \</span>
+<span class="bash">        --with-pcre \</span>
+<span class="bash">        --pid-path=/var/run/nginx.pid \</span>
+<span class="bash">        --with-http_ssl_module &amp;&amp; \</span>
+<span class="bash">    make &amp;&amp; make install</span>
+<span class="hljs-keyword">RUN</span><span class="bash"> rm -rf /nginx-1.19.9</span>
+<span class="hljs-keyword">CMD</span><span class="bash"> [<span class="hljs-string">&quot;nginx&quot;</span>, <span class="hljs-string">&quot;-g&quot;</span>, <span class="hljs-string">&quot;daemon off;&quot;</span>]</span></code></pre>
 
 <p> <code>COPY</code> 指令的通用语法是 <code>COPY &lt;source&gt; &lt;destination&gt;</code>，其中 source 在本地文件系统中，而 destination 在镜像内部。作为目标的 <code>.</code> 表示镜像内的工作目录，除非另有设置，否则默认为 <code>/</code>。</p>
 <p>根据Dockerfile构建镜像：</p>
@@ -520,9 +520,9 @@ Successfully tagged custom-nginx:built</code></pre>
 <p><code>ARG</code>命令可以声明变量，此后可以用<code>$&#123;param&#125;</code>引用。</p>
 <p><code>ADD</code>命令允许在构建的时候从互联网添加文件。</p>
 <p>优化Dockerfile如下：</p>
-<pre><code class="hljs shell">FROM ubuntu:latest
-RUN apt-get update &amp;&amp; \
-    apt-get install build-essential\ 
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> ubuntu:latest
+<span class="hljs-keyword">RUN</span><span class="bash"> apt-get update &amp;&amp; \</span>
+<span class="bash">    apt-get install build-essential\ </span>
                     libpcre3 \
                     libpcre3-dev \
                     zlib1g \
@@ -530,22 +530,22 @@ RUN apt-get update &amp;&amp; \
                     libssl-dev \
                     -y &amp;&amp; \
     apt-get clean &amp;&amp; rm -rf /var/lib/apt/lists/*
-ARG FILENAME=&quot;nginx-1.19.9&quot;
-ARG EXTENSION=&quot;tar.gz&quot;
-ADD http://nginx.org/download/$&#123;FILENAME&#125;.$&#123;EXTENSION&#125; .
-RUN tar -xvf $&#123;FILENAME&#125;.$&#123;EXTENSION&#125; &amp;&amp; rm $&#123;FILENAME&#125;.$&#123;EXTENSION&#125;
-RUN cd $&#123;FILENAME&#125; &amp;&amp; \
-    ./configure \
-        --sbin-path=/usr/bin/nginx \
-        --conf-path=/etc/nginx/nginx.conf \
-        --error-log-path=/var/log/nginx/error.log \
-        --http-log-path=/var/log/nginx/access.log \
-        --with-pcre \
-        --pid-path=/var/run/nginx.pid \
-        --with-http_ssl_module &amp;&amp; \
-    make &amp;&amp; make install
-RUN rm -rf /$&#123;FILENAME&#125;
-CMD [&quot;nginx&quot;, &quot;-g&quot;, &quot;daemon off;&quot;]</code></pre>
+<span class="hljs-keyword">ARG</span> FILENAME=<span class="hljs-string">&quot;nginx-1.19.9&quot;</span>
+<span class="hljs-keyword">ARG</span> EXTENSION=<span class="hljs-string">&quot;tar.gz&quot;</span>
+<span class="hljs-keyword">ADD</span><span class="bash"> http://nginx.org/download/<span class="hljs-variable">$&#123;FILENAME&#125;</span>.<span class="hljs-variable">$&#123;EXTENSION&#125;</span> .</span>
+<span class="hljs-keyword">RUN</span><span class="bash"> tar -xvf <span class="hljs-variable">$&#123;FILENAME&#125;</span>.<span class="hljs-variable">$&#123;EXTENSION&#125;</span> &amp;&amp; rm <span class="hljs-variable">$&#123;FILENAME&#125;</span>.<span class="hljs-variable">$&#123;EXTENSION&#125;</span></span>
+<span class="hljs-keyword">RUN</span><span class="bash"> <span class="hljs-built_in">cd</span> <span class="hljs-variable">$&#123;FILENAME&#125;</span> &amp;&amp; \</span>
+<span class="bash">    ./configure \</span>
+<span class="bash">        --sbin-path=/usr/bin/nginx \</span>
+<span class="bash">        --conf-path=/etc/nginx/nginx.conf \</span>
+<span class="bash">        --error-log-path=/var/<span class="hljs-built_in">log</span>/nginx/error.log \</span>
+<span class="bash">        --http-log-path=/var/<span class="hljs-built_in">log</span>/nginx/access.log \</span>
+<span class="bash">        --with-pcre \</span>
+<span class="bash">        --pid-path=/var/run/nginx.pid \</span>
+<span class="bash">        --with-http_ssl_module &amp;&amp; \</span>
+<span class="bash">    make &amp;&amp; make install</span>
+<span class="hljs-keyword">RUN</span><span class="bash"> rm -rf /<span class="hljs-variable">$&#123;FILENAME&#125;</span></span>
+<span class="hljs-keyword">CMD</span><span class="bash"> [<span class="hljs-string">&quot;nginx&quot;</span>, <span class="hljs-string">&quot;-g&quot;</span>, <span class="hljs-string">&quot;daemon off;&quot;</span>]</span></code></pre>
 
 <blockquote>
 <p>变量可以在构建镜像的时候用<code>--build-arg</code>传递</p>
@@ -599,9 +599,9 @@ fhsinchy/hello-dock   latest     f540930e8157   4 months ago        21.9MB
 fhsinchy/rmbyext      latest     90eafb66c390   5 months ago        50.9MB</code></pre>
 
 <p>查看构建镜像的Dockerfile</p>
-<pre><code class="hljs shell">FROM ubuntu:latest
-RUN apt-get update &amp;&amp; \
-    apt-get install build-essential\ 
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> ubuntu:latest
+<span class="hljs-keyword">RUN</span><span class="bash"> apt-get update &amp;&amp; \</span>
+<span class="bash">    apt-get install build-essential\ </span>
                     libpcre3 \
                     libpcre3-dev \
                     zlib1g \
@@ -609,36 +609,36 @@ RUN apt-get update &amp;&amp; \
                     libssl-dev \
                     -y &amp;&amp; \
     apt-get clean &amp;&amp; rm -rf /var/lib/apt/lists/*
-ARG FILENAME=&quot;nginx-1.19.9&quot;
-ARG EXTENSION=&quot;tar.gz&quot;
-ADD http://nginx.org/download/$&#123;FILENAME&#125;.$&#123;EXTENSION&#125; .
-RUN tar -xvf $&#123;FILENAME&#125;.$&#123;EXTENSION&#125; &amp;&amp; rm $&#123;FILENAME&#125;.$&#123;EXTENSION&#125;
-RUN cd $&#123;FILENAME&#125; &amp;&amp; \
-    ./configure \
-        --sbin-path=/usr/bin/nginx \
-        --conf-path=/etc/nginx/nginx.conf \
-        --error-log-path=/var/log/nginx/error.log \
-        --http-log-path=/var/log/nginx/access.log \
-        --with-pcre \
-        --pid-path=/var/run/nginx.pid \
-        --with-http_ssl_module &amp;&amp; \
-    make &amp;&amp; make install
-RUN rm -rf /$&#123;FILENAME&#125;
-CMD [&quot;nginx&quot;, &quot;-g&quot;, &quot;daemon off;&quot;]</code></pre>
+<span class="hljs-keyword">ARG</span> FILENAME=<span class="hljs-string">&quot;nginx-1.19.9&quot;</span>
+<span class="hljs-keyword">ARG</span> EXTENSION=<span class="hljs-string">&quot;tar.gz&quot;</span>
+<span class="hljs-keyword">ADD</span><span class="bash"> http://nginx.org/download/<span class="hljs-variable">$&#123;FILENAME&#125;</span>.<span class="hljs-variable">$&#123;EXTENSION&#125;</span> .</span>
+<span class="hljs-keyword">RUN</span><span class="bash"> tar -xvf <span class="hljs-variable">$&#123;FILENAME&#125;</span>.<span class="hljs-variable">$&#123;EXTENSION&#125;</span> &amp;&amp; rm <span class="hljs-variable">$&#123;FILENAME&#125;</span>.<span class="hljs-variable">$&#123;EXTENSION&#125;</span></span>
+<span class="hljs-keyword">RUN</span><span class="bash"> <span class="hljs-built_in">cd</span> <span class="hljs-variable">$&#123;FILENAME&#125;</span> &amp;&amp; \</span>
+<span class="bash">    ./configure \</span>
+<span class="bash">        --sbin-path=/usr/bin/nginx \</span>
+<span class="bash">        --conf-path=/etc/nginx/nginx.conf \</span>
+<span class="bash">        --error-log-path=/var/<span class="hljs-built_in">log</span>/nginx/error.log \</span>
+<span class="bash">        --http-log-path=/var/<span class="hljs-built_in">log</span>/nginx/access.log \</span>
+<span class="bash">        --with-pcre \</span>
+<span class="bash">        --pid-path=/var/run/nginx.pid \</span>
+<span class="bash">        --with-http_ssl_module &amp;&amp; \</span>
+<span class="bash">    make &amp;&amp; make install</span>
+<span class="hljs-keyword">RUN</span><span class="bash"> rm -rf /<span class="hljs-variable">$&#123;FILENAME&#125;</span></span>
+<span class="hljs-keyword">CMD</span><span class="bash"> [<span class="hljs-string">&quot;nginx&quot;</span>, <span class="hljs-string">&quot;-g&quot;</span>, <span class="hljs-string">&quot;daemon off;&quot;</span>]</span></code></pre>
 
 <p>RUN apt-get update &amp;&amp; <br>    apt-get install build-essential\<br>                    libpcre3 <br>                    libpcre3-dev <br>                    zlib1g <br>                    zlib1g-dev <br>                    libssl-dev <br>                    -y &amp;&amp; <br>    apt-get clean &amp;&amp; rm -rf /var/lib/apt/lists/* 下载编译镜像需要的类库。后续构建完镜像运行的时候只需要 <code>libpcre3</code> 和 <code>zlib1g</code>其他可以删除。</p>
 <p>优化Dockerfile如下：</p>
-<pre><code class="hljs shell">FROM ubuntu:latest
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> ubuntu:latest
 
-EXPOSE 80
+<span class="hljs-keyword">EXPOSE</span> <span class="hljs-number">80</span>
 
-ARG FILENAME=&quot;nginx-1.19.9&quot;
-ARG EXTENSION=&quot;tar.gz&quot;
+<span class="hljs-keyword">ARG</span> FILENAME=<span class="hljs-string">&quot;nginx-1.19.9&quot;</span>
+<span class="hljs-keyword">ARG</span> EXTENSION=<span class="hljs-string">&quot;tar.gz&quot;</span>
 
-ADD https://nginx.org/download/$&#123;FILENAME&#125;.$&#123;EXTENSION&#125; .
+<span class="hljs-keyword">ADD</span><span class="bash"> https://nginx.org/download/<span class="hljs-variable">$&#123;FILENAME&#125;</span>.<span class="hljs-variable">$&#123;EXTENSION&#125;</span> .</span>
 
-RUN apt-get update &amp;&amp; \
-    apt-get install build-essential \ 
+<span class="hljs-keyword">RUN</span><span class="bash"> apt-get update &amp;&amp; \</span>
+<span class="bash">    apt-get install build-essential \ </span>
                     libpcre3 \
                     libpcre3-dev \
                     zlib1g \
@@ -653,11 +653,11 @@ RUN apt-get update &amp;&amp; \
         --error-log-path=/var/log/nginx/error.log \
         --http-log-path=/var/log/nginx/access.log \
         --with-pcre \
-        --pid-path=/var/run/nginx.pid \
-        --with-http_ssl_module &amp;&amp; \
-    make &amp;&amp; make install &amp;&amp; \
-    cd / &amp;&amp; rm -rfv /$&#123;FILENAME&#125; &amp;&amp; \
-    apt-get remove build-essential \ 
+        --pid-path=/var/<span class="hljs-keyword">run</span><span class="bash">/nginx.pid \</span>
+<span class="bash">        --with-http_ssl_module &amp;&amp; \</span>
+<span class="bash">    make &amp;&amp; make install &amp;&amp; \</span>
+<span class="bash">    <span class="hljs-built_in">cd</span> / &amp;&amp; rm -rfv /<span class="hljs-variable">$&#123;FILENAME&#125;</span> &amp;&amp; \</span>
+<span class="bash">    apt-get remove build-essential \ </span>
                     libpcre3-dev \
                     zlib1g-dev \
                     libssl-dev \
@@ -665,7 +665,7 @@ RUN apt-get update &amp;&amp; \
     apt-get autoremove -y &amp;&amp; \
     apt-get clean &amp;&amp; rm -rf /var/lib/apt/lists/*
 
-CMD [&quot;nginx&quot;, &quot;-g&quot;, &quot;daemon off;&quot;]</code></pre>
+<span class="hljs-keyword">CMD</span><span class="bash"> [<span class="hljs-string">&quot;nginx&quot;</span>, <span class="hljs-string">&quot;-g&quot;</span>, <span class="hljs-string">&quot;daemon off;&quot;</span>]</span></code></pre>
 
 <p>重新构建：</p>
 <pre><code class="hljs shell">➜  nginxTest  sudo docker image build --tag custom-nginx:built2 .
@@ -720,6 +720,122 @@ fhsinchy/rmbyext      latest     90eafb66c390   5 months ago     50.9MB</code></
 
 <blockquote>
 <p>custom-nginx:built 359MB -&gt; custom-nginx:built2 84.1MB</p>
+</blockquote>
+<h2 id="Alpine-Linux"><a href="#Alpine-Linux" class="headerlink" title="Alpine Linux"></a>Alpine Linux</h2><p>Apline Linux 是一个功能完毕的Linux发行版，因为其更加轻量级镜像仅为2.8MB，并且比较安全，更适合创建容器。</p>
+<p>以Alpine Linux为基础构建custom-nginx:</p>
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> alpine:latest
+
+<span class="hljs-keyword">EXPOSE</span> <span class="hljs-number">80</span>
+
+<span class="hljs-keyword">ARG</span> FILENAME=<span class="hljs-string">&quot;nginx-1.19.2&quot;</span>
+<span class="hljs-keyword">ARG</span> EXTENSION=<span class="hljs-string">&quot;tar.gz&quot;</span>
+
+<span class="hljs-keyword">ADD</span><span class="bash"> https://nginx.org/download/<span class="hljs-variable">$&#123;FILENAME&#125;</span>.<span class="hljs-variable">$&#123;EXTENSION&#125;</span> .</span>
+
+<span class="hljs-keyword">RUN</span><span class="bash"> apk add --no-cache pcre zlib &amp;&amp; \</span>
+<span class="bash">    apk add --no-cache \</span>
+<span class="bash">            --virtual .build-deps \</span>
+<span class="bash">            build-base \ </span>
+            pcre-dev \
+            zlib-dev \
+            openssl-dev &amp;&amp; \
+    tar -xvf $&#123;FILENAME&#125;.$&#123;EXTENSION&#125; &amp;&amp; rm $&#123;FILENAME&#125;.$&#123;EXTENSION&#125; &amp;&amp; \
+    cd $&#123;FILENAME&#125; &amp;&amp; \
+    ./configure \
+        --sbin-path=/usr/bin/nginx \
+        --conf-path=/etc/nginx/nginx.conf \
+        --error-log-path=/var/log/nginx/error.log \
+        --http-log-path=/var/log/nginx/access.log \
+        --with-pcre \
+        --pid-path=/var/<span class="hljs-keyword">run</span><span class="bash">/nginx.pid \</span>
+<span class="bash">        --with-http_ssl_module &amp;&amp; \</span>
+<span class="bash">    make &amp;&amp; make install &amp;&amp; \</span>
+<span class="bash">    <span class="hljs-built_in">cd</span> / &amp;&amp; rm -rfv /<span class="hljs-variable">$&#123;FILENAME&#125;</span> &amp;&amp; \</span>
+<span class="bash">    apk del .build-deps</span>
+
+<span class="hljs-keyword">CMD</span><span class="bash"> [<span class="hljs-string">&quot;nginx&quot;</span>, <span class="hljs-string">&quot;-g&quot;</span>, <span class="hljs-string">&quot;daemon off;&quot;</span>]</span></code></pre>
+
+<p>与Ubuntu不同的是包管理器不是apt-get，而是apk。</p>
+<ul>
+<li><p><code>--no-cache</code>下载的软件包将不被缓存。</p>
+</li>
+<li><p><code>--virtual</code>将一堆软件包捆绑到单个<code>虚拟</code>软件包中。</p>
+</li>
+<li><p>软件包在不同发行版的名称可能不同，可以到指定发行版的仓库进行搜索。 <a target="_blank" rel="noopener" href="https://pkgs.alpinelinux.org/packages">Alpine Linux软件包</a></p>
+</li>
+</ul>
+<p>看看效果</p>
+<pre><code class="hljs shell">➜  alpine_linux  sudo docker images
+REPOSITORY            TAG        IMAGE ID       CREATED          SIZE
+custom-nginx          alphine    168baac68146   50 seconds ago   12.2MB
+custom-nginx          built2     592d52212ef2   4 days ago       84.1MB
+custom-nginx          built      8ea7b598f205   4 days ago       359MB
+custom-nginx          packaged   b11ac2f129e6   4 days ago       132MB
+ubuntu                latest     9873176a8ff5   9 days ago       72.7MB
+alpine                latest     d4ff818577bc   11 days ago      5.6MB
+busybox               latest     69593048aa3a   2 weeks ago      1.24MB
+node                  latest     d1b3088a17b1   3 weeks ago      908MB
+nginx                 latest     d1a364dc548d   4 weeks ago      133MB
+fhsinchy/hello-dock   latest     f540930e8157   5 months ago     21.9MB
+fhsinchy/rmbyext      latest     90eafb66c390   5 months ago     50.9MB</code></pre>
+
+<p>Ubuntu 84.1MB -&gt; Alpine Linux 12.2MB</p>
+<h2 id="创建可执行镜像"><a href="#创建可执行镜像" class="headerlink" title="创建可执行镜像"></a>创建可执行镜像</h2><p>创建rmbyext可执行镜像</p>
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> python:<span class="hljs-number">3</span>-alpine
+
+<span class="hljs-keyword">WORKDIR</span><span class="bash"> /zone</span>
+
+<span class="hljs-keyword">RUN</span><span class="bash"> apk add --no-cache git &amp;&amp; \</span>
+<span class="bash">    pip install git+https://github.com/fhsinchy/rmbyext.git</span>
+    apk del git
+
+<span class="hljs-keyword">ENTRYPOINT</span><span class="bash"> [ <span class="hljs-string">&quot;rmbyext&quot;</span> ]</span></code></pre>
+
+<ul>
+<li>rmbyext是python脚本，基础镜像要是能执行python的环境。</li>
+<li><code>WORKDIR</code>指定工作目录，<code>zone</code>一个随机的名字。</li>
+<li><code>apk add --no-cache git &amp;&amp; pip install git+https://github.com/fhsinchy/rmbyext.git &amp;&amp; apk del git</code>下git，用git下载rmbyext脚本，然后删除git。</li>
+<li><code>ENTRYPOINT</code>将<code>rmbyext</code>脚本设置为镜像入口。</li>
+</ul>
+<blockquote>
+<p>exec模式： 容器中的任务进程就是容器内的 1 号进程，exec 模式是建议的使用模式，因为当运行任务的进程作为容器中的 1 号进程时，我们可以通过 docker 的 stop 命令优雅的结束容器。exec 模式的特点是不会通过 shell 执行相关的命令，所以像 $HOME 这样的环境变量是取不到的。</p>
+<p>shell 模式：会先执行<code>/bin/sh -c</code>，然后执行任务，<code>/bin/sh -c</code>为1号进程。</p>
+<p>CMD指令：</p>
+<ul>
+<li>CMD 指令的目的是为容器提供默认的执行命令。</li>
+<li>CMD 指令有三种使用方式，其中的一种是为 ENTRYPOINT 提供默认的参数：<ul>
+<li>CMD [“param1”,”param2”]<br>另外两种使用方式分别是 exec 模式和 shell 模式：</li>
+<li>CMD [“executable”,”param1”,”param2”]  // 这是 exec 模式的写法，注意需要使用双引号。</li>
+<li>CMD command param1 param2        // 这是 shell 模式的写法。</li>
+</ul>
+</li>
+<li>注意命令行参数可以覆盖 CMD 指令的设置，但是只能是重写，却不能给 CMD 中的命令通过命令行传递参数。</li>
+<li>一般的镜像都会提供容器启动时的默认命令，但是有些场景中用户并不想执行默认的命令。用户可以通过命令行参数的方式覆盖 CMD 指令提供的默认命令。</li>
+</ul>
+<p>ENTRYPOINT 指令：</p>
+<ul>
+<li><p>ENTRYPOINT 指令的目的也是为容器指定默认执行的任务。</p>
+</li>
+<li><p>ENTRYPOINT 指令有两种使用方式，就是我们前面介绍的 exec 模式和 shell 模式：</p>
+<ul>
+<li>ENTRYPOINT [“executable”, “param1”, “param2”]  // 这是 exec 模式的写法，注意需要使用双引号</li>
+<li>ENTRYPOINT command param1 param2        // 这是 shell 模式的写法。<br>exec 模式和 shell 模式的基本用法和 CMD 指令是一样的，下面我们介绍一些比较特殊的用法。</li>
+</ul>
+</li>
+<li><p>指定 ENTRYPOINT 指令为 exec 模式时，命令行上指定的参数会作为参数添加到 ENTRYPOINT 指定命令的参数列表中。</p>
+</li>
+<li><p>以下面的Dockerfile构建镜像</p>
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> ubuntu
+<span class="hljs-keyword">ENTRYPOINT</span><span class="bash"> [ <span class="hljs-string">&quot;top&quot;</span>, <span class="hljs-string">&quot;-b&quot;</span> ]</span></code></pre>
+
+<p>执行<code>docker run --rm &lt;container name&gt; -c</code> 则命令<code>-c</code>会被添加到<code>top -b</code>后面，容器实际执行的命令为<code>top -b -c</code>。</p>
+<p>CMD命令则不会，以下面的Dockerfile构建镜像</p>
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> ubuntu
+<span class="hljs-keyword">CMD</span><span class="bash"> [ <span class="hljs-string">&quot;top&quot;</span>, <span class="hljs-string">&quot;-b&quot;</span> ]</span></code></pre>
+
+<p>执行<code>docker run --rm &lt;container name&gt; -c</code> ,容器实际执行的命令为<code>top -b</code>。</p>
+</li>
+</ul>
 </blockquote>
 
             </div>
