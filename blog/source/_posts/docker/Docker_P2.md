@@ -72,7 +72,7 @@ Successfully built 970ed77299da
 ```
 
 * `docker image build`用于构建镜像。守护程序会在上下文中找名为Dockerfile的文件。
-* `.`设置此构建的上下文。就是构建的时候从什么路径找Dockerfile文件。
+* `.`设置此构建的上下文。就是构建的时候从什么路径找Dockerfile文件，另外构建的时候可以访问上下文中的所有文件。
 
 现在要运行构建的容器，需要指定容器ID`970ed77299da`
 
@@ -750,4 +750,112 @@ ENTRYPOINT [ "rmbyext" ]
 >  ```
 >
 >  执行`docker run --rm <container name> -c` ,容器实际执行的命令为`top -b`。
+
+## 共享Docker镜像
+
+去[Docker Hub](https://hub.docker.com/)注册免费账户，该账户可以托管无限的公共仓库和一个私有仓库。
+
+在客户端登录Docker Hub
+
+```shell
+➜  ~  sudo docker login
+Login with your Docker ID to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com to create one.
+Username: uhuang
+Password:
+WARNING! Your password will be stored unencrypted in /root/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+```
+
+在线共享的镜像必须要进行标记，构建镜像的时候参数 `-t` or `--tag`，`--tag <image repository>:<image tag>`，并且有固定标记的语法`<docker hub username>/<image name>:<image tag>`。
+
+如下构建一个共享的镜像：
+
+Dockerfile:
+
+```dockerfile
+FROM alpine:latest
+
+EXPOSE 80
+
+ARG FILENAME="nginx-1.19.2"
+ARG EXTENSION="tar.gz"
+
+ADD https://nginx.org/download/${FILENAME}.${EXTENSION} .
+
+RUN apk add --no-cache pcre zlib && \
+    apk add --no-cache \
+            --virtual .build-deps \
+            build-base \ 
+            pcre-dev \
+            zlib-dev \
+            openssl-dev && \
+    tar -xvf ${FILENAME}.${EXTENSION} && rm ${FILENAME}.${EXTENSION} && \
+    cd ${FILENAME} && \
+    ./configure \
+        --sbin-path=/usr/bin/nginx \
+        --conf-path=/etc/nginx/nginx.conf \
+        --error-log-path=/var/log/nginx/error.log \
+        --http-log-path=/var/log/nginx/access.log \
+        --with-pcre \
+        --pid-path=/var/run/nginx.pid \
+        --with-http_ssl_module && \
+    make && make install && \
+    cd / && rm -rfv /${FILENAME} && \
+    apk del .build-deps
+
+CMD ["nginx", "-g", "daemon off;"]
+```
+
+构建：
+
+```shell
+➜  nginxTest  sudo docker image build --tag uhuang/custom-nginx:latest --file Dockerfile.built .
+Sending build context to Docker daemon  1.068MB
+Step 1/7 : FROM alpine:latest
+ ---> d4ff818577bc
+Step 2/7 : EXPOSE 80
+ ---> Using cache
+ ---> e13dfd027a53
+Step 3/7 : ARG FILENAME="nginx-1.19.2"
+ ---> Using cache
+ ---> b5d86eec1599
+Step 4/7 : ARG EXTENSION="tar.gz"
+ ---> Using cache
+ ---> a80b88ff221a
+Step 5/7 : ADD https://nginx.org/download/${FILENAME}.${EXTENSION} .
+Downloading  1.049MB/1.049MB
+ ---> Using cache
+ ---> 4cc0ee6c5abb
+Step 6/7 : RUN apk add --no-cache pcre zlib &&     apk add --no-cache             --virtual .build-deps             build-base             pcre-dev             zlib-dev             openssl-dev &&     tar -xvf ${FILENAME}.${EXTENSION} && rm ${FILENAME}.${EXTENSION} &&     cd ${FILENAME} &&     ./configure         --sbin-path=/usr/bin/nginx         --conf-path=/etc/nginx/nginx.conf         --error-log-path=/var/log/nginx/error.log         --http-log-path=/var/log/nginx/access.log         --with-pcre         --pid-path=/var/run/nginx.pid         --with-http_ssl_module &&     make && make install &&     cd / && rm -rfv /${FILENAME} &&     apk del .build-deps
+ ---> Using cache
+ ---> e3b88a40cbea
+Step 7/7 : CMD ["nginx", "-g", "daemon off;"]
+ ---> Using cache
+ ---> 168baac68146
+Successfully built 168baac68146
+Successfully tagged uhuang/custom-nginx:latest
+```
+
+* Dockerfile只是默认的名字，可以使用`--file`or`-f`命令指定构建文件。
+* 镜像名称`uhuang/custom-nginx`上传以后不可更改，标签`latest`可以随时更改。
+
+上传镜像命令：
+
+```shell
+docker image push <image repository>:<image tag>
+```
+
+```shell
+➜  nginxTest  sudo docker image push uhuang/custom-nginx:latest
+The push refers to repository [docker.io/uhuang/custom-nginx]
+2ae0de0648af: Pushed
+1d756dc4e694: Pushed
+72e830a4dff5: Mounted from library/alpine
+latest: digest: sha256:33908d6d49857c1762fe08af59679ffe8bf705a60a4ebacac5702bd0abb233e5 size: 950
+```
+
+![image-20210629220512351](/img/docker/image-20210629220512351.png)
 
