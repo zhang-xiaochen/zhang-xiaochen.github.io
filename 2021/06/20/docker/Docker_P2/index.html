@@ -171,7 +171,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      5.2k 字
+      5.9k 字
     </span>
   
 
@@ -181,7 +181,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      85
+      97
        分钟
     </span>
   
@@ -268,7 +268,7 @@ Successfully built 970ed77299da</code></pre>
 
 <ul>
 <li><code>docker image build</code>用于构建镜像。守护程序会在上下文中找名为Dockerfile的文件。</li>
-<li><code>.</code>设置此构建的上下文。就是构建的时候从什么路径找Dockerfile文件。</li>
+<li><code>.</code>设置此构建的上下文。就是构建的时候从什么路径找Dockerfile文件，另外构建的时候可以访问上下文中的所有文件。</li>
 </ul>
 <p>现在要运行构建的容器，需要指定容器ID<code>970ed77299da</code></p>
 <pre><code class="hljs shell">➜  test  sudo docker container run --rm --detach --name my-nginx --publish 8888:80 970ed77299da
@@ -837,6 +837,95 @@ fhsinchy/rmbyext      latest     90eafb66c390   5 months ago     50.9MB</code></
 </li>
 </ul>
 </blockquote>
+<h2 id="共享Docker镜像"><a href="#共享Docker镜像" class="headerlink" title="共享Docker镜像"></a>共享Docker镜像</h2><p>去<a target="_blank" rel="noopener" href="https://hub.docker.com/">Docker Hub</a>注册免费账户，该账户可以托管无限的公共仓库和一个私有仓库。</p>
+<p>在客户端登录Docker Hub</p>
+<pre><code class="hljs shell">➜  ~  sudo docker login
+Login with your Docker ID to push and pull images from Docker Hub. If you don&#x27;t have a Docker ID, head over to https://hub.docker.com to create one.
+Username: uhuang
+Password:
+WARNING! Your password will be stored unencrypted in /root/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded</code></pre>
+
+<p>在线共享的镜像必须要进行标记，构建镜像的时候参数 <code>-t</code> or <code>--tag</code>，<code>--tag &lt;image repository&gt;:&lt;image tag&gt;</code>，并且有固定标记的语法<code>&lt;docker hub username&gt;/&lt;image name&gt;:&lt;image tag&gt;</code>。</p>
+<p>如下构建一个共享的镜像：</p>
+<p>Dockerfile:</p>
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> alpine:latest
+
+<span class="hljs-keyword">EXPOSE</span> <span class="hljs-number">80</span>
+
+<span class="hljs-keyword">ARG</span> FILENAME=<span class="hljs-string">&quot;nginx-1.19.2&quot;</span>
+<span class="hljs-keyword">ARG</span> EXTENSION=<span class="hljs-string">&quot;tar.gz&quot;</span>
+
+<span class="hljs-keyword">ADD</span><span class="bash"> https://nginx.org/download/<span class="hljs-variable">$&#123;FILENAME&#125;</span>.<span class="hljs-variable">$&#123;EXTENSION&#125;</span> .</span>
+
+<span class="hljs-keyword">RUN</span><span class="bash"> apk add --no-cache pcre zlib &amp;&amp; \</span>
+<span class="bash">    apk add --no-cache \</span>
+<span class="bash">            --virtual .build-deps \</span>
+<span class="bash">            build-base \ </span>
+            pcre-dev \
+            zlib-dev \
+            openssl-dev &amp;&amp; \
+    tar -xvf $&#123;FILENAME&#125;.$&#123;EXTENSION&#125; &amp;&amp; rm $&#123;FILENAME&#125;.$&#123;EXTENSION&#125; &amp;&amp; \
+    cd $&#123;FILENAME&#125; &amp;&amp; \
+    ./configure \
+        --sbin-path=/usr/bin/nginx \
+        --conf-path=/etc/nginx/nginx.conf \
+        --error-log-path=/var/log/nginx/error.log \
+        --http-log-path=/var/log/nginx/access.log \
+        --with-pcre \
+        --pid-path=/var/<span class="hljs-keyword">run</span><span class="bash">/nginx.pid \</span>
+<span class="bash">        --with-http_ssl_module &amp;&amp; \</span>
+<span class="bash">    make &amp;&amp; make install &amp;&amp; \</span>
+<span class="bash">    <span class="hljs-built_in">cd</span> / &amp;&amp; rm -rfv /<span class="hljs-variable">$&#123;FILENAME&#125;</span> &amp;&amp; \</span>
+<span class="bash">    apk del .build-deps</span>
+
+<span class="hljs-keyword">CMD</span><span class="bash"> [<span class="hljs-string">&quot;nginx&quot;</span>, <span class="hljs-string">&quot;-g&quot;</span>, <span class="hljs-string">&quot;daemon off;&quot;</span>]</span></code></pre>
+
+<p>构建：</p>
+<pre><code class="hljs shell">➜  nginxTest  sudo docker image build --tag uhuang/custom-nginx:latest --file Dockerfile.built .
+Sending build context to Docker daemon  1.068MB
+Step 1/7 : FROM alpine:latest
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> d4ff818577bc</span>
+Step 2/7 : EXPOSE 80
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> Using cache</span>
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> e13dfd027a53</span>
+Step 3/7 : ARG FILENAME=&quot;nginx-1.19.2&quot;
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> Using cache</span>
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> b5d86eec1599</span>
+Step 4/7 : ARG EXTENSION=&quot;tar.gz&quot;
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> Using cache</span>
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> a80b88ff221a</span>
+Step 5/7 : ADD https://nginx.org/download/$&#123;FILENAME&#125;.$&#123;EXTENSION&#125; .
+Downloading  1.049MB/1.049MB
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> Using cache</span>
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> 4cc0ee6c5abb</span>
+Step 6/7 : RUN apk add --no-cache pcre zlib &amp;&amp;     apk add --no-cache             --virtual .build-deps             build-base             pcre-dev             zlib-dev             openssl-dev &amp;&amp;     tar -xvf $&#123;FILENAME&#125;.$&#123;EXTENSION&#125; &amp;&amp; rm $&#123;FILENAME&#125;.$&#123;EXTENSION&#125; &amp;&amp;     cd $&#123;FILENAME&#125; &amp;&amp;     ./configure         --sbin-path=/usr/bin/nginx         --conf-path=/etc/nginx/nginx.conf         --error-log-path=/var/log/nginx/error.log         --http-log-path=/var/log/nginx/access.log         --with-pcre         --pid-path=/var/run/nginx.pid         --with-http_ssl_module &amp;&amp;     make &amp;&amp; make install &amp;&amp;     cd / &amp;&amp; rm -rfv /$&#123;FILENAME&#125; &amp;&amp;     apk del .build-deps
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> Using cache</span>
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> e3b88a40cbea</span>
+Step 7/7 : CMD [&quot;nginx&quot;, &quot;-g&quot;, &quot;daemon off;&quot;]
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> Using cache</span>
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> 168baac68146</span>
+Successfully built 168baac68146
+Successfully tagged uhuang/custom-nginx:latest</code></pre>
+
+<ul>
+<li>Dockerfile只是默认的名字，可以使用<code>--file</code>or<code>-f</code>命令指定构建文件。</li>
+<li>镜像名称<code>uhuang/custom-nginx</code>上传以后不可更改，标签<code>latest</code>可以随时更改。</li>
+</ul>
+<p>上传镜像命令：</p>
+<pre><code class="hljs shell">docker image push &lt;image repository&gt;:&lt;image tag&gt;</code></pre>
+
+<pre><code class="hljs shell">➜  nginxTest  sudo docker image push uhuang/custom-nginx:latest
+The push refers to repository [docker.io/uhuang/custom-nginx]
+2ae0de0648af: Pushed
+1d756dc4e694: Pushed
+72e830a4dff5: Mounted from library/alpine
+latest: digest: sha256:33908d6d49857c1762fe08af59679ffe8bf705a60a4ebacac5702bd0abb233e5 size: 950</code></pre>
+
+<p><img src="/img/docker/image-20210629220512351.png" srcset="/img/loading.gif" alt="image-20210629220512351"></p>
 
             </div>
             <hr>
