@@ -1,0 +1,705 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  <title>Docker_P3 - 方寸山</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/tomorrow.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_6peoq002giu.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.0.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>方寸山</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container page-header text-center fade-in-up">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2021-06-28 16:30" pubdate>
+      2021年6月28日 下午
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.9k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      29
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto" id="post">
+            <!-- SEO header -->
+            <h1 style="display: none">Docker_P3</h1>
+            
+            <div class="markdown-body" id="post-body">
+              <h1 id="Docker-P3"><a href="#Docker-P3" class="headerlink" title="Docker_P3"></a>Docker_P3</h1><blockquote>
+<p>以JavaScript应用为类，学习Docker在实际开发中的使用。</p>
+<p>可以在<a target="_blank" rel="noopener" href="https://github.com/fhsinchy/docker-handbook-projects/">这个仓库</a>中找到示例项目的代码，欢迎 ⭐。</p>
+</blockquote>
+<h2 id="如何编写开发Dockerfile"><a href="#如何编写开发Dockerfile" class="headerlink" title="如何编写开发Dockerfile"></a>如何编写开发Dockerfile</h2><p>先从仓库拉代码，代码机构如下，我们将构建hello-dock项目：</p>
+<pre><code class="hljs shell">➜  docker-handbook-projects (master) ls -l
+total 68
+-rw-r--r-- 1 chen chen  1211 Jul  4 10:17 LICENSE
+-rw-r--r-- 1 chen chen  1338 Jul  4 10:17 README.md
+drwxr-xr-x 2 chen chen  4096 Jul  4 10:17 custom-nginx
+-rw-r--r-- 1 chen chen 38405 Jul  4 10:17 docker-handbook-github.png
+drwxr-xr-x 5 chen chen  4096 Jul  4 10:17 fullstack-notes-application
+drwxr-xr-x 4 chen chen  4096 Jul  4 10:17 hello-dock
+drwxr-xr-x 3 chen chen  4096 Jul  4 10:17 notes-api
+drwxr-xr-x 2 chen chen  4096 Jul  4 10:17 rmbyext</code></pre>
+
+<pre><code class="hljs shell">➜  hello-dock (master) ls -l
+total 16
+-rw-r--r-- 1 chen chen  324 Jul  4 10:17 index.html
+-rw-r--r-- 1 chen chen  258 Jul  4 10:17 package.json
+drwxr-xr-x 2 chen chen 4096 Jul  4 10:17 public
+drwxr-xr-x 4 chen chen 4096 Jul  4 10:17 src</code></pre>
+
+<p>编写Dockerfile:</p>
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> node:lts-alpine
+<span class="hljs-keyword">EXPOSE</span> <span class="hljs-number">3000</span>
+<span class="hljs-keyword">USER</span> node
+<span class="hljs-keyword">RUN</span><span class="bash"> mkdir -p /home/node/app</span>
+<span class="hljs-keyword">WORKDIR</span><span class="bash"> /home/node/app</span>
+<span class="hljs-keyword">COPY</span><span class="bash"> ./package.json .</span>
+<span class="hljs-keyword">RUN</span><span class="bash"> npm install</span>
+<span class="hljs-keyword">COPY</span><span class="bash"> . .</span>
+<span class="hljs-keyword">CMD</span><span class="bash"> [<span class="hljs-string">&quot;npm&quot;</span>, <span class="hljs-string">&quot;run&quot;</span>, <span class="hljs-string">&quot;dev&quot;</span>]</span></code></pre>
+
+<ul>
+<li>node项目，以node为基础镜像，可以去Docker Hub查询需要的版本，以上版本是针对Alpine的长期支持版。</li>
+<li><code>USER</code>指定用户为node，默认情况下，Docker 以 root 用户身份运行容器。 但是根据 <a target="_blank" rel="noopener" href="https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md">Docker and Node.js Best Practices</a>，这有安全隐患。因此，最好是尽可能以非 root 用户身份运行。node 镜像附带一个名为 <code>node</code> 的非 root 用户，可以使用 <code>USER</code> 指令将其设置为默认用户。</li>
+<li><code>RUN mkdir -p /home/node/app</code>创建目录，Linux非root用户的工作目录默认为<code>/home/&lt;user name&gt;</code>。</li>
+<li><code>WORKDIR</code>指定工作目录为<code>/home/node/app</code>。</li>
+<li>先复制pacjage.json文件，用命令<code>npm install</code>安装依赖。然后再将项目其他文件复制进来。</li>
+<li>CMD 设置默认命令为<code>npm run dev</code>，此处为<code>exec</code>形式。</li>
+</ul>
+<p>构建镜像：</p>
+<pre><code class="hljs shell">➜  hello-dock (master) sudo docker image build --tag uhuang/hello-dock:dev --file ./Dockerfile.dev .        ✱
+Sending build context to Docker daemon  30.21kB
+Step 1/9 : FROM node:lts-alpine
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> c2ce8f082a62</span>
+Step 2/9 : EXPOSE 3000
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> Using cache</span>
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> b3f64d55a2ed</span>
+Step 3/9 : USER node
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> Using cache</span>
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> 5975d2407d4c</span>
+Step 4/9 : RUN mkdir -p /home/node/app
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> Using cache</span>
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> 8bead4c5e7be</span>
+Step 5/9 : WORKDIR /home/node/app
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> Using cache</span>
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> 9fbb7ef4c816</span>
+Step 6/9 : COPY ./package.json .
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> Using cache</span>
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> 9eb745e57567</span>
+Step 7/9 : RUN npm install
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> Using cache</span>
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> 1eb171c1ac95</span>
+Step 8/9 : COPY . .
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> Using cache</span>
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> 118251b84039</span>
+Step 9/9 : CMD [&quot;npm&quot;, &quot;run&quot;, &quot;dev&quot;]
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> Using cache</span>
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> 53a1851c5630</span>
+Successfully built 53a1851c5630
+Successfully tagged uhuang/hello-dock:dev</code></pre>
+
+<p>运行镜像，访问页面：</p>
+<pre><code class="hljs shell">➜  hello-dock (master) sudo docker container run --rm --detach --publish 3000:3000 --name hello-dock uhuang/he
+llo-dock:dev
+abccec9be7f494b5138d54502a592640914216c9be112eb899f7f25b200e1bb4</code></pre>
+
+<p><img src="/img/docker/image-20210704104315825.png" srcset="/img/loading.gif" alt="image-20210704104315825"></p>
+<h2 id="在Docker中使用绑定挂载"><a href="#在Docker中使用绑定挂载" class="headerlink" title="在Docker中使用绑定挂载"></a>在Docker中使用绑定挂载</h2><blockquote>
+<p>在容器中使用挂载可以直接从容器中引用本地文件系统，从而无需复制本地文件。</p>
+</blockquote>
+<p>可以在运行容器的时候(<code>docker container run</code>， <code>docker container start</code>)绑定挂载<code>--volume</code>or<code>-v</code>，命令如下：</p>
+<pre><code class="hljs shell">--volume &lt;local file system directory absolute path&gt;:&lt;container file system directory absolute path&gt;:&lt;read write access&gt;</code></pre>
+
+<p>挂载本地目录重启uhuang/hello-dock:dev镜像</p>
+<pre><code class="hljs shell">docker container run \                                                          ✱
+       --rm \
+         --publish 3000:3000 \
+       --name hello-dock \
+       --volume $(pwd):/home/node/app \
+       uhuang/hello-dock:dev</code></pre>
+
+<pre><code class="hljs shell">➜  hello-dock (master) sudo docker container run \                                                          ✱
+<span class="hljs-meta">&gt;</span><span class="bash"> --rm \</span>
+<span class="hljs-meta">&gt;</span><span class="bash"> --publish 3000:3000 \</span>
+<span class="hljs-meta">&gt;</span><span class="bash"> --name hello-dock \</span>
+<span class="hljs-meta">&gt;</span><span class="bash"> --volume $(<span class="hljs-built_in">pwd</span>):/home/node/app \</span>
+<span class="hljs-meta">&gt;</span><span class="bash"> uhuang/hello-dock:dev</span>
+
+<span class="hljs-meta">&gt;</span><span class="bash"> hello-dock@0.0.0 dev /home/node/app</span>
+<span class="hljs-meta">&gt;</span><span class="bash"> vite</span>
+
+sh: vite: not found
+npm ERR! code ELIFECYCLE
+npm ERR! syscall spawn
+npm ERR! file sh
+npm ERR! errno ENOENT
+npm ERR! hello-dock@0.0.0 dev: `vite`
+npm ERR! spawn ENOENT
+npm ERR!
+npm ERR! Failed at the hello-dock@0.0.0 dev script.
+npm ERR! This is probably not a problem with npm. There is likely additional logging output above.
+npm WARN Local package.json exists, but node_modules missing, did you mean to install?
+
+npm ERR! A complete log of this run can be found in:
+npm ERR!     /home/node/.npm/_logs/2021-07-04T02_54_19_757Z-debug.log</code></pre>
+
+<p>以上启动命令省略了<code>--detach</code>选项，可以看到启动报错，原因是node项目的依赖存放在根目录的<code>node_modules</code>目录中，如下：</p>
+<pre><code class="hljs shell">➜  ~  sudo docker exec -it hello-dock ash
+~/app $ ls -l
+total 128
+-rw-r--r--    1 root     root           324 Jul  4 02:17 index.html
+drwxr-sr-x    1 node     node          4096 Jul  4 03:38 node_modules
+-rw-r--r--    1 node     node        107276 Jul  4 02:38 package-lock.json
+-rw-r--r--    1 root     root           258 Jul  4 02:17 package.json
+drwxr-xr-x    2 root     root          4096 Jul  4 02:17 public
+drwxr-xr-x    4 root     root          4096 Jul  4 02:17 src
+~/app $</code></pre>
+
+<p>被挂载的本地目录替换，本地目录是没有<code>node_modules</code>依赖的。此问题可以用匿名卷解决。</p>
+<h2 id="在Docker中使用匿名卷"><a href="#在Docker中使用匿名卷" class="headerlink" title="在Docker中使用匿名卷"></a>在Docker中使用匿名卷</h2><p>使用匿名卷语法：</p>
+<pre><code class="hljs shell">--volume &lt;container file system directory absolute path&gt;:&lt;read write access&gt;</code></pre>
+
+<p>可以理解为即使用本地文件系统，也使用容器文件系统。</p>
+<p>添加匿名卷如下：</p>
+<pre><code class="hljs shell">docker container run /
+       --rm /
+       --detach /
+       --publish 3000:3000 /
+       --name hello-dock /
+       --volume $(pwd):/home/node/app /
+       --volume /home/node/app/node_modules  /
+       uhuang/hello-dock:dev</code></pre>
+
+<pre><code class="hljs shell">➜  hello-dock (master) sudo docker container run --rm --detach --publish 3000:3000 --name hello-dock --volume $(pwd):/home/node/app --volume /home/node/app/node_modules  uhuang/hello-dock:dev           ✱
+226ee0909eb3dd840f8e02f5be27a4dbf0eba9841fba7ac577885ce972c25f35
+➜  hello-dock (master) sudo docker container ls                                                                                                                                                           ✱
+CONTAINER ID   IMAGE                   COMMAND                  CREATED         STATUS        PORTS                                       NAMES
+226ee0909eb3   uhuang/hello-dock:dev   &quot;docker-entrypoint.s…&quot;   2 seconds ago   Up 1 second   0.0.0.0:3000-&gt;3000/tcp, :::3000-&gt;3000/tcp   hello-dock</code></pre>
+
+<h2 id="在Docker中执行多阶段构建"><a href="#在Docker中执行多阶段构建" class="headerlink" title="在Docker中执行多阶段构建"></a>在Docker中执行多阶段构建</h2><blockquote>
+<p>在开发模式下，<code>npm run serve</code> 命令启动一个开发服务器，该服务器将应用程序提供给用户。该服务器不仅提供文件，还提供热重载功能。</p>
+<p>在生产模式下，<code>npm run build</code> 命令将所有 JavaScript 代码编译为一些静态 HTML、CSS 和 JavaScript 文件。要运行这些文件，不需要 node 或任何其他运行时依赖项。只需要一个像 <code>nginx</code> 这样的服务器。</p>
+<p>按照以上思路构建生产模式的镜像：</p>
+<ul>
+<li>以node镜像为基础将项目编译静态文件。</li>
+<li>在node镜像的上装nginx，提供静态文件。</li>
+</ul>
+<p>以上思路有个问题，即node镜像比较大，并且node相关的依赖文件环境，对于最终生产环境来说是没有用的，我们完全可以在生产模式丢掉node相关依赖：</p>
+<ul>
+<li>以node为基础将项目编译为静态文件。</li>
+<li>把编译好的静态文件复制到nginx镜像中。</li>
+</ul>
+</blockquote>
+<p>Dockerfile:</p>
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> node:lts-alpine as builder
+
+<span class="hljs-keyword">WORKDIR</span><span class="bash"> /app</span>
+
+<span class="hljs-keyword">COPY</span><span class="bash"> ./package.json ./</span>
+<span class="hljs-keyword">RUN</span><span class="bash"> npm install</span>
+
+<span class="hljs-keyword">COPY</span><span class="bash"> . .</span>
+<span class="hljs-keyword">RUN</span><span class="bash"> npm run build</span>
+
+<span class="hljs-keyword">FROM</span> nginx:stable-alpine
+
+<span class="hljs-keyword">EXPOSE</span> <span class="hljs-number">80</span>
+
+<span class="hljs-keyword">COPY</span><span class="bash"> --from=builder /app/dist /usr/share/nginx/html</span></code></pre>
+
+<ul>
+<li><code>FROM node:lts-alpine as builder</code> 中<code>as</code>指定别名，相当于变量，下文可以引用。</li>
+<li><code>COPY --from=builder /app/dist /usr/share/nginx/html</code>中<code>--from</code>指定最初的构建镜像别名，从中复制文件到nginx。</li>
+</ul>
+<p>构建镜像运行：</p>
+<pre><code class="hljs shell">➜  hello-dock (master) sudo docker image build --tag uhuang/hello-dock:prd --file Dockerfile.prd .                                                                                                        ✱
+Sending build context to Docker daemon  30.21kB
+Step 1/9 : FROM node:lts-alpine as builder
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> c2ce8f082a62</span>
+Step 2/9 : WORKDIR /app
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> Using cache</span>
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> ac43a9d70795</span>
+Step 3/9 : COPY ./package.json ./
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> Using cache</span>
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> 890d6e4ea609</span>
+Step 4/9 : RUN npm install
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> Using cache</span>
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> bf79ea514c9b</span>
+Step 5/9 : COPY . .
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> Using cache</span>
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> 8382e8d4b236</span>
+Step 6/9 : RUN npm run build
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> Using cache</span>
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> dce0ae8b77dd</span>
+Step 7/9 : FROM nginx:stable-alpine
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> e1ccef1fb908</span>
+Step 8/9 : EXPOSE 80
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> Using cache</span>
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> fd53a267fb2b</span>
+Step 9/9 : COPY --from=builder /app/dist /usr/share/nginx/html
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> Using cache</span>
+<span class="hljs-meta"> ---&gt;</span><span class="bash"> 29f67e89417c</span>
+Successfully built 29f67e89417c
+Successfully tagged uhuang/hello-dock:prd
+
+➜  hello-dock (master) sudo docker container run --rm --detach --publish 8888:80 --name hello-dock-prd uhuang/hello-dock:prd                                                                              ✱
+520be6184ddec93e2da3b21092b21f989e42ab8ec8b159f05fc957a6b4831d6a</code></pre>
+
+<p><img src="/img/docker/image-20210704121509111.png" srcset="/img/loading.gif" alt="image-20210704121509111"></p>
+<blockquote>
+<p>如果要构建具有大量依赖关系的大型应用程序，那么多阶段构建可能会非常有用。如果配置正确，则可以很好地优化和压缩分多个阶段构建的镜像。</p>
+</blockquote>
+<h2 id="忽略不被要的文件"><a href="#忽略不被要的文件" class="headerlink" title="忽略不被要的文件"></a>忽略不被要的文件</h2><blockquote>
+<p>类似于git的<code>.gigiginore</code>文件，在``docker<code>中</code>.dockerignore` 文件包含要从镜像构建中排除的文件和目录的列表。</p>
+</blockquote>
+<pre><code class="hljs shell">.git
+*Dockerfile*
+*docker-compose*
+node_modules</code></pre>
+
+<ul>
+<li><code>.dockerignore</code> 文件必须位于构建上下文中。这里提到的文件和目录将被 <code>COPY</code> 指令忽略。但是，如果执行绑定挂载，则 <code>.dockerignore</code> 文件将对此无效。</li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%AE%B9%E5%99%A8/">容器</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Docker/">Docker</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/06/20/docker/Docker_P2/">
+                        <span class="hidden-mobile">Docker_P2</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '#post-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "Docker_P3&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

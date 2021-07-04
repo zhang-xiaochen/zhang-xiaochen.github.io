@@ -171,7 +171,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      3.3k 字
+      3.8k 字
     </span>
   
 
@@ -181,7 +181,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      49
+      57
        分钟
     </span>
   
@@ -263,10 +263,8 @@
 <pre><code class="hljs shell">docker container run &lt;image name&gt;</code></pre>
 
 <p>image name 可以是在线仓库或者本地系统的任何镜像。</p>
-<h3 id="映射端口"><a href="#映射端口" class="headerlink" title="映射端口"></a>映射端口</h3><p>要允许从容器外部进行访问，必须将容器内的相应端口发布到本地网络上的端口。</p>
+<h3 id="映射端口-–publish"><a href="#映射端口-–publish" class="headerlink" title="映射端口[–publish]"></a>映射端口[–publish]</h3><p>要允许从容器外部进行访问，必须将容器内的相应端口发布到本地网络上的端口。</p>
 <pre><code class="hljs shell">--publish &lt;host port&gt;:&lt;container port&gt;</code></pre>
-
-
 
 <pre><code class="hljs shell">➜  chen5  sudo docker container run --publish 8080:80 fhsinchy/hello-dock
 [sudo] password for chen:
@@ -289,7 +287,7 @@ Status: Downloaded newer image for fhsinchy/hello-dock:latest
 /docker-entrypoint.sh: Configuration complete; ready for start up</code></pre>
 
 <p><img src="/img/docker/image-20210615213732401.png" srcset="/img/loading.gif" alt="image-20210615213732401"></p>
-<h3 id="容器后台运行"><a href="#容器后台运行" class="headerlink" title="容器后台运行"></a>容器后台运行</h3><pre><code class="hljs shell">---detach 或 -d 参数</code></pre>
+<h3 id="容器后台运行-–detach"><a href="#容器后台运行-–detach" class="headerlink" title="容器后台运行[–detach]"></a>容器后台运行[–detach]</h3><pre><code class="hljs shell">---detach 或 -d 参数</code></pre>
 
 <pre><code class="hljs shell">➜  chen5  sudo docker container run --publish 8080:80 --detach fhsinchy/hello-dock
 9918abf45820ca77a80eaa178d7ad66ee114547f3a5124a919e4b5e52b66f486</code></pre>
@@ -297,7 +295,7 @@ Status: Downloaded newer image for fhsinchy/hello-dock:latest
 <blockquote>
 <p>–publish 和 –detach顺序没有要求</p>
 </blockquote>
-<h3 id="查看正在运行的容器"><a href="#查看正在运行的容器" class="headerlink" title="查看正在运行的容器"></a>查看正在运行的容器</h3><pre><code class="hljs shell">container ls</code></pre>
+<h3 id="查看正在运行的容器-container-ls"><a href="#查看正在运行的容器-container-ls" class="headerlink" title="查看正在运行的容器[container ls]"></a>查看正在运行的容器[container ls]</h3><pre><code class="hljs shell">container ls</code></pre>
 
 
 
@@ -306,7 +304,7 @@ CONTAINER ID   IMAGE                 COMMAND                  CREATED         ST
                        NAMES
 9918abf45820   fhsinchy/hello-dock   &quot;/docker-entrypoint.…&quot;   2 minutes ago   Up 2 minutes   0.0.0.0:8080-&gt;80/tcp, :::8080-&gt;80/tcp   bold_dewdney</code></pre>
 
-<h3 id="查看过去运行的容器"><a href="#查看过去运行的容器" class="headerlink" title="查看过去运行的容器"></a>查看过去运行的容器</h3><pre><code class="hljs shell">--all 或 -a</code></pre>
+<h3 id="查看过去运行的容器-container-ls-–all"><a href="#查看过去运行的容器-container-ls-–all" class="headerlink" title="查看过去运行的容器[container ls –all]"></a>查看过去运行的容器[container ls –all]</h3><pre><code class="hljs shell">--all 或 -a</code></pre>
 
 
 
@@ -317,7 +315,7 @@ b5bcc6b696c9   fhsinchy/hello-dock   &quot;/docker-entrypoint.…&quot;   17 min
                                     tender_lamarr
 2c2ac99bf078   hello-world           &quot;/hello&quot;                 2 days ago       Exited (0) 2 days ago</code></pre>
 
-<h3 id="指定容器名"><a href="#指定容器名" class="headerlink" title="指定容器名"></a>指定容器名</h3><p>默认情况下每个容器都有两个标识符 </p>
+<h3 id="指定容器名-–name"><a href="#指定容器名-–name" class="headerlink" title="指定容器名[–name]"></a>指定容器名[–name]</h3><p>默认情况下每个容器都有两个标识符 </p>
 <ul>
 <li>CONTAINER ID  -&gt; 64个字符的随机字符串</li>
 <li>NAME -&gt; 两个单词的随机组合，下滑线连接</li>
@@ -332,7 +330,7 @@ CONTAINER ID   IMAGE                 COMMAND                  CREATED          S
 2925cec4da90   fhsinchy/hello-dock   &quot;/docker-entrypoint.…&quot;   13 seconds ago   Up 12 seconds   0.0.0.0:8888-&gt;80/tcp, :::8888-&gt;80/tcp   hello-docker-container
 9918abf45820   fhsinchy/hello-dock   &quot;/docker-entrypoint.…&quot;   16 minutes ago   Up 16 minutes   0.0.0.0:8080-&gt;80/tcp, :::8080-&gt;80/tcp   bold_dewdney</code></pre>
 
-<h3 id="重命名旧容器"><a href="#重命名旧容器" class="headerlink" title="重命名旧容器"></a>重命名旧容器</h3><pre><code class="hljs shell">docker container rename &lt;container identifier&gt; &lt;new name&gt;</code></pre>
+<h3 id="重命名旧容器-container-rename"><a href="#重命名旧容器-container-rename" class="headerlink" title="重命名旧容器[container rename]"></a>重命名旧容器[container rename]</h3><pre><code class="hljs shell">docker container rename &lt;container identifier&gt; &lt;new name&gt;</code></pre>
 
 <pre><code class="hljs shell">➜  chen5  sudo docker container rename bold_dewdney hello-docker-container2
 ➜  chen5  sudo docker container ls
@@ -341,7 +339,7 @@ CONTAINER ID   IMAGE                 COMMAND                  CREATED          S
 2925cec4da90   fhsinchy/hello-dock   &quot;/docker-entrypoint.…&quot;   3 minutes ago    Up 3 minutes    0.0.0.0:8888-&gt;80/tcp, :::8888-&gt;80/tcp   hello-docker-container
 9918abf45820   fhsinchy/hello-dock   &quot;/docker-entrypoint.…&quot;   18 minutes ago   Up 18 minutes   0.0.0.0:8080-&gt;80/tcp, :::8080-&gt;80/tcp   hello-docker-container2</code></pre>
 
-<h3 id="停止容器"><a href="#停止容器" class="headerlink" title="停止容器"></a>停止容器</h3><pre><code class="hljs shell">docker container stop &lt;container identifier&gt;</code></pre>
+<h3 id="停止容器-container-stop"><a href="#停止容器-container-stop" class="headerlink" title="停止容器[container stop]"></a>停止容器[container stop]</h3><pre><code class="hljs shell">docker container stop &lt;container identifier&gt;</code></pre>
 
 <blockquote>
 <p>container identifier 可以是 CONTAINER ID 或者NAME</p>
@@ -362,7 +360,7 @@ hello-docker-container2
 ➜  chen5  sudo docker container ls
 CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES</code></pre>
 
-<h3 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h3><pre><code class="hljs shell">docker container start &lt;container identifier&gt;</code></pre>
+<h3 id="启动容器-container-start"><a href="#启动容器-container-start" class="headerlink" title="启动容器[container start]"></a>启动容器[container start]</h3><pre><code class="hljs shell">docker container start &lt;container identifier&gt;</code></pre>
 
 <pre><code class="hljs shell">➜  chen5  sudo docker container start hello-docker-container
 hello-docker-container
@@ -371,7 +369,7 @@ CONTAINER ID   IMAGE                 COMMAND                  CREATED         ST
                    NAMES
 2925cec4da90   fhsinchy/hello-dock   &quot;/docker-entrypoint.…&quot;   9 minutes ago   Up 3 seconds   0.0.0.0:8888-&gt;80/tcp, :::8888-&gt;80/tcp   hello-docker-container</code></pre>
 
-<h3 id="重启容器"><a href="#重启容器" class="headerlink" title="重启容器"></a>重启容器</h3><pre><code class="hljs shell">docker container restart &lt;container identifier&gt;</code></pre>
+<h3 id="重启容器-container-restart"><a href="#重启容器-container-restart" class="headerlink" title="重启容器[container restart]"></a>重启容器[container restart]</h3><pre><code class="hljs shell">docker container restart &lt;container identifier&gt;</code></pre>
 
 <pre><code class="hljs shell">➜  chen5  sudo docker container restart hello-docker-container
 hello-docker-container
@@ -380,7 +378,7 @@ CONTAINER ID   IMAGE                 COMMAND                  CREATED          S
                     NAMES
 2925cec4da90   fhsinchy/hello-dock   &quot;/docker-entrypoint.…&quot;   10 minutes ago   Up 2 seconds   0.0.0.0:8888-&gt;80/tcp, :::8888-&gt;80/tcp   hello-docker-container</code></pre>
 
-<h3 id="创建容器"><a href="#创建容器" class="headerlink" title="创建容器"></a>创建容器</h3><pre><code class="hljs shell">docker container create &lt;options&gt;</code></pre>
+<h3 id="创建容器-container-create"><a href="#创建容器-container-create" class="headerlink" title="创建容器[container create]"></a>创建容器[container create]</h3><pre><code class="hljs shell">docker container create &lt;options&gt;</code></pre>
 
 <blockquote>
 <p><code>docker container run</code> 命令实际是 <code>docker container create</code> 和 <code>docker container start</code>两个命令的组合</p>
@@ -391,7 +389,7 @@ CONTAINER ID   IMAGE                 COMMAND                  CREATED          S
 CONTAINER ID   IMAGE                 COMMAND                  CREATED         STATUS    PORTS     NAMES
 8b88edf8d01e   fhsinchy/hello-dock   &quot;/docker-entrypoint.…&quot;   4 seconds ago   Created             great_ganguly</code></pre>
 
-<h3 id="移除挂起的容器"><a href="#移除挂起的容器" class="headerlink" title="移除挂起的容器"></a>移除挂起的容器</h3><pre><code class="hljs shell">docker container rm &lt;container identifier&gt;</code></pre>
+<h3 id="移除挂起的容器-container-rm"><a href="#移除挂起的容器-container-rm" class="headerlink" title="移除挂起的容器[container rm]"></a>移除挂起的容器[container rm]</h3><pre><code class="hljs shell">docker container rm &lt;container identifier&gt;</code></pre>
 
 <blockquote>
 <p>已被停止或终止的容器仍保留在系统中。这些挂起的容器可能会占用空间或与较新的容器发生冲突</p>
@@ -446,7 +444,7 @@ hello-docker-container
 ➜  ~  sudo docker container ls --all
 CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES</code></pre>
 
-<h3 id="以交互式模式启动容器"><a href="#以交互式模式启动容器" class="headerlink" title="以交互式模式启动容器"></a>以交互式模式启动容器</h3><blockquote>
+<h3 id="以交互式模式启动容器-it"><a href="#以交互式模式启动容器-it" class="headerlink" title="以交互式模式启动容器[-it]"></a>以交互式模式启动容器[-it]</h3><blockquote>
 <p>交互式镜像如 ubuntu之类的linux镜像，运行的时候进入到ubuntu的bash，启动的时候需要加  <code>-it</code>参数。</p>
 <ul>
 <li>选项 <code>-i</code> 或 <code>--interactive</code> 连接到容器的输入流，以便可以将输入发送到 bash。</li>
@@ -475,7 +473,12 @@ UBUNTU_CODENAME=focal
 root@269a69740972:/#</code></pre>
 
 <blockquote>
-<p>退出交互容器命令 <code>ctrl d</code></p>
+<p>需要注意的是在-it进入交互模式后，用exit退出会停止容器</p>
+<pre><code class="hljs shell"><span class="hljs-meta">&gt;</span><span class="bash">➜  hello-dock (master) sudo docker container run --rm -it --name ubuntu ubuntu                                                                                                                            ✱</span>
+<span class="hljs-meta">&gt;</span><span class="bash">root@5cf1025e8542:/<span class="hljs-comment"># exit</span></span>
+<span class="hljs-meta">&gt;</span><span class="bash"><span class="hljs-built_in">exit</span></span>
+<span class="hljs-meta">&gt;</span><span class="bash">➜  hello-dock (master) sudo docker container ls                                                                                                                                                           ✱</span>
+<span class="hljs-meta">&gt;</span><span class="bash">CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES</span></code></pre>
 </blockquote>
 <p>交互执行node，可以运行js代码</p>
 <pre><code class="hljs shell">➜  ~  sudo docker run --rm -it node
@@ -500,6 +503,36 @@ undefined
 undefined
 <span class="hljs-meta">&gt;</span><span class="bash"> a + b</span>
 3</code></pre>
+
+<h3 id="进入容器-attach-or-exec-it"><a href="#进入容器-attach-or-exec-it" class="headerlink" title="进入容器[attach or exec -it]"></a>进入容器[attach or exec -it]</h3><p>启动一个ubuntu容器：</p>
+<pre><code class="hljs shell">CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+➜  hello-dock (master) sudo docker container run --rm -dit --name ubuntu ubuntu                                                                                                                           ✱
+0bbe6199d5edfc29b6dee3def6b82d33ea01e97da5c650c60a7eeebc9451693a
+➜  hello-dock (master) sudo docker container ls                                                                                                                                                           ✱
+CONTAINER ID   IMAGE     COMMAND   CREATED         STATUS         PORTS     NAMES
+0bbe6199d5ed   ubuntu    &quot;bash&quot;    6 seconds ago   Up 5 seconds             ubuntu</code></pre>
+
+<p><code>attach</code> 示例：</p>
+<pre><code class="hljs shell">➜  hello-dock (master) sudo docker attach ubuntu                                                                                                                                                          ✱
+root@7c7af33eec53:/# echo $SHELL
+/bin/bash
+root@7c7af33eec53:/# exit
+exit
+➜  hello-dock (master) sudo docker container ls                                                                                                                                                           ✱
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES</code></pre>
+
+<blockquote>
+<p><code>attach</code>命令在退出容器交互的时候会停止容器，不推荐使用</p>
+</blockquote>
+<p><code>exec -it</code>示例：</p>
+<pre><code class="hljs shell">➜  hello-dock (master) sudo docker exec -it ubuntu bash                                                                                                                                                   ✱
+root@5fdbf1bcfe1b:/# echo $SHELL
+/bin/bash
+root@5fdbf1bcfe1b:/# exit
+exit
+➜  hello-dock (master) sudo docker container ls                                                                                                                                                           ✱
+CONTAINER ID   IMAGE     COMMAND   CREATED          STATUS          PORTS     NAMES
+5fdbf1bcfe1b   ubuntu    &quot;bash&quot;    41 seconds ago   Up 39 seconds             ubuntu</code></pre>
 
 <h3 id="在容器里执行命令"><a href="#在容器里执行命令" class="headerlink" title="在容器里执行命令"></a>在容器里执行命令</h3><blockquote>
 <p>通过运行特定容器 让容器执行传入的命令。</p>
@@ -558,10 +591,31 @@ t2.pdf
 1 FILES DELETED.
 ➜  test</code></pre>
 
+<h3 id="导入导出-export-import"><a href="#导入导出-export-import" class="headerlink" title="导入导出[export | import]"></a>导入导出[export | import]</h3><p>导出：</p>
+<pre><code class="hljs shell">➜  ~  sudo docker container ls
+CONTAINER ID   IMAGE     COMMAND     CREATED         STATUS         PORTS     NAMES
+4a9d4431994f   alpine    &quot;/bin/sh&quot;   3 seconds ago   Up 2 seconds             alpine
+5fdbf1bcfe1b   ubuntu    &quot;bash&quot;      6 minutes ago   Up 6 minutes             ubuntu
+➜  ~  sudo docker export alpine &gt; ~/imagebak/alpine.tar
+➜  ~  ls ~/imagebak
+alpine.tar</code></pre>
 
+<p>导入：</p>
+<pre><code class="hljs shell">➜  ~  sudo cat ~/imagebak/alpine.tar | sudo docker import - test/alpine
+sha256:08e69562ae6d5e7a656f9dc7123a226601df5e35bf1c0a768f9c2c0f666633b0
+➜  ~  sudo docker images
+REPOSITORY            TAG          IMAGE ID       CREATED          SIZE
+test/alpine           latest       08e69562ae6d   28 seconds ago   5.59MB
+uhuang/hello-dock     dev          53a1851c5630   56 minutes ago   189MB
+custom-nginx          alphine      168baac68146   6 days ago       12.2MB
+uhuang/custom-nginx   latest       168baac68146   6 days ago       12.2MB
+custom-nginx          built2       592d52212ef2   10 days ago      84.1MB
+custom-nginx          built        8ea7b598f205   10 days ago      359MB
+custom-nginx          packaged     b11ac2f129e6   10 days ago      132MB</code></pre>
 
-
-
+<blockquote>
+<p><em>注：用户既可以使用</em> <em><code>docker load</code></em> <em>来导入镜像存储文件到本地镜像库，也可以使用</em> <em><code>docker import</code></em> <em>来导入一个容器快照到本地镜像库。这两者的区别在于容器快照文件将丢弃所有的历史记录和元数据信息（即仅保存容器当时的快照状态），而镜像存储文件将保存完整记录，体积也要大。此外，从容器快照文件导入时可以重新指定标签等元数据信息。</em></p>
+</blockquote>
 
             </div>
             <hr>

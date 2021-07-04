@@ -214,7 +214,7 @@
             <h1 style="display: none">Docker_P2</h1>
             
             <div class="markdown-body" id="post-body">
-              <h1 id="Docker-P2"><a href="#Docker-P2" class="headerlink" title="Docker_P2"></a>Docker_P2</h1><h2 id="如何创建Docker镜像"><a href="#如何创建Docker镜像" class="headerlink" title="如何创建Docker镜像"></a>如何创建Docker镜像</h2><p>使用DockerFile文件创建镜像，Dockerfile是创建镜像的指令集。如下是一个简单的Nginx镜像的Dockerfile文件。</p>
+              <h1 id="Docker-P2"><a href="#Docker-P2" class="headerlink" title="Docker_P2"></a>Docker_P2</h1><h2 id="如何创建Docker镜像-image-build"><a href="#如何创建Docker镜像-image-build" class="headerlink" title="如何创建Docker镜像[image build]"></a>如何创建Docker镜像[image build]</h2><p>使用DockerFile文件创建镜像，Dockerfile是创建镜像的指令集。如下是一个简单的Nginx镜像的Dockerfile文件。</p>
 <pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> ubuntu:latest
 
 <span class="hljs-keyword">EXPOSE</span> <span class="hljs-number">80</span>
@@ -275,7 +275,7 @@ Successfully built 970ed77299da</code></pre>
 f9800dc2c291203187db0a11ee373df38ef44ebfdb0be869bb7fb368d5e85c94</code></pre>
 
 <p><img src="/img/docker/image-20210621212638568.png" srcset="/img/loading.gif" alt="image-20210621212638568"></p>
-<h2 id="如何标记Docker镜像"><a href="#如何标记Docker镜像" class="headerlink" title="如何标记Docker镜像"></a>如何标记Docker镜像</h2><p>在构建镜像的时候可以标记镜像，从而在使用的时候不必依赖随机生成的ID。命令如下</p>
+<h2 id="如何标记Docker镜像-–tag"><a href="#如何标记Docker镜像-–tag" class="headerlink" title="如何标记Docker镜像[–tag]"></a>如何标记Docker镜像[–tag]</h2><p>在构建镜像的时候可以标记镜像，从而在使用的时候不必依赖随机生成的ID。命令如下</p>
 <pre><code class="hljs shell">--tag &lt;image repository&gt;:&lt;image tag&gt;</code></pre>
 
 <p>repository 通常指镜像名称，而 tag 指特定的构建或版本。</p>
@@ -326,7 +326,7 @@ fhsinchy/rmbyext      latest     90eafb66c390   5 months ago     50.9MB</code></
 <p>根据镜像ID标记（构建时候未标记，可以抢救一下）</p>
 <pre><code class="hljs shell">docker image tag &lt;image id&gt; &lt;image repository&gt;:&lt;image tag&gt;</code></pre>
 
-<h2 id="如何列表展示、删除镜像"><a href="#如何列表展示、删除镜像" class="headerlink" title="如何列表展示、删除镜像"></a>如何列表展示、删除镜像</h2><p>列表展示</p>
+<h2 id="如何列表展示、删除镜像-image-ls-rm"><a href="#如何列表展示、删除镜像-image-ls-rm" class="headerlink" title="如何列表展示、删除镜像[image ls | rm]"></a>如何列表展示、删除镜像[image ls | rm]</h2><p>列表展示</p>
 <pre><code class="hljs shell">image ls 或 images</code></pre>
 
 <pre><code class="hljs shell">➜  test  sudo docker image ls
@@ -837,7 +837,7 @@ fhsinchy/rmbyext      latest     90eafb66c390   5 months ago     50.9MB</code></
 </li>
 </ul>
 </blockquote>
-<h2 id="共享Docker镜像"><a href="#共享Docker镜像" class="headerlink" title="共享Docker镜像"></a>共享Docker镜像</h2><p>去<a target="_blank" rel="noopener" href="https://hub.docker.com/">Docker Hub</a>注册免费账户，该账户可以托管无限的公共仓库和一个私有仓库。</p>
+<h2 id="共享Docker镜像-image-push"><a href="#共享Docker镜像-image-push" class="headerlink" title="共享Docker镜像[image push]"></a>共享Docker镜像[image push]</h2><p>去<a target="_blank" rel="noopener" href="https://hub.docker.com/">Docker Hub</a>注册免费账户，该账户可以托管无限的公共仓库和一个私有仓库。</p>
 <p>在客户端登录Docker Hub</p>
 <pre><code class="hljs shell">➜  ~  sudo docker login
 Login with your Docker ID to push and pull images from Docker Hub. If you don&#x27;t have a Docker ID, head over to https://hub.docker.com to create one.
@@ -955,6 +955,12 @@ latest: digest: sha256:33908d6d49857c1762fe08af59679ffe8bf705a60a4ebacac5702bd0a
                 <div class="post-prevnext row">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2021/06/28/docker/Docker_P3/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Docker_P3</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
