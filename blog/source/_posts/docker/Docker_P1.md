@@ -84,15 +84,13 @@ docker container run <image name>
 
 image name 可以是在线仓库或者本地系统的任何镜像。
 
-### 映射端口
+### 映射端口[--publish]
 
 要允许从容器外部进行访问，必须将容器内的相应端口发布到本地网络上的端口。
 
 ```shell
 --publish <host port>:<container port>
 ```
-
-
 
 ```shell
 ➜  chen5  sudo docker container run --publish 8080:80 fhsinchy/hello-dock
@@ -118,7 +116,7 @@ Status: Downloaded newer image for fhsinchy/hello-dock:latest
 
 ![image-20210615213732401](/img/docker/image-20210615213732401.png)
 
-### 容器后台运行
+### 容器后台运行[--detach]
 
 ```shell
 ---detach 或 -d 参数
@@ -131,7 +129,7 @@ Status: Downloaded newer image for fhsinchy/hello-dock:latest
 
 > --publish 和 --detach顺序没有要求
 
-### 查看正在运行的容器
+### 查看正在运行的容器[container ls]
 
 ```shell
 container ls 
@@ -146,7 +144,7 @@ CONTAINER ID   IMAGE                 COMMAND                  CREATED         ST
 9918abf45820   fhsinchy/hello-dock   "/docker-entrypoint.…"   2 minutes ago   Up 2 minutes   0.0.0.0:8080->80/tcp, :::8080->80/tcp   bold_dewdney
 ```
 
-### 查看过去运行的容器
+### 查看过去运行的容器[container ls --all]
 
 ```shell
 --all 或 -a
@@ -163,7 +161,7 @@ b5bcc6b696c9   fhsinchy/hello-dock   "/docker-entrypoint.…"   17 minutes ago  
 2c2ac99bf078   hello-world           "/hello"                 2 days ago       Exited (0) 2 days ago
 ```
 
-### 指定容器名
+### 指定容器名[--name]
 
 默认情况下每个容器都有两个标识符 
 
@@ -184,7 +182,7 @@ CONTAINER ID   IMAGE                 COMMAND                  CREATED          S
 9918abf45820   fhsinchy/hello-dock   "/docker-entrypoint.…"   16 minutes ago   Up 16 minutes   0.0.0.0:8080->80/tcp, :::8080->80/tcp   bold_dewdney
 ```
 
-### 重命名旧容器
+### 重命名旧容器[container rename]
 
 ```shell
 docker container rename <container identifier> <new name>
@@ -199,7 +197,7 @@ CONTAINER ID   IMAGE                 COMMAND                  CREATED          S
 9918abf45820   fhsinchy/hello-dock   "/docker-entrypoint.…"   18 minutes ago   Up 18 minutes   0.0.0.0:8080->80/tcp, :::8080->80/tcp   hello-docker-container2
 ```
 
-### 停止容器
+### 停止容器[container stop]
 
 ```shell
 docker container stop <container identifier>
@@ -231,7 +229,7 @@ hello-docker-container2
 CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
 ```
 
-### 启动容器
+### 启动容器[container start]
 
 ```shell
 docker container start <container identifier>
@@ -246,7 +244,7 @@ CONTAINER ID   IMAGE                 COMMAND                  CREATED         ST
 2925cec4da90   fhsinchy/hello-dock   "/docker-entrypoint.…"   9 minutes ago   Up 3 seconds   0.0.0.0:8888->80/tcp, :::8888->80/tcp   hello-docker-container
 ```
 
-### 重启容器
+### 重启容器[container restart]
 
 ```shell
 docker container restart <container identifier>
@@ -261,7 +259,7 @@ CONTAINER ID   IMAGE                 COMMAND                  CREATED          S
 2925cec4da90   fhsinchy/hello-dock   "/docker-entrypoint.…"   10 minutes ago   Up 2 seconds   0.0.0.0:8888->80/tcp, :::8888->80/tcp   hello-docker-container
 ```
 
-### 创建容器
+### 创建容器[container create]
 
 ```shell
 docker container create <options>
@@ -277,7 +275,7 @@ CONTAINER ID   IMAGE                 COMMAND                  CREATED         ST
 8b88edf8d01e   fhsinchy/hello-dock   "/docker-entrypoint.…"   4 seconds ago   Created             great_ganguly
 ```
 
-### 移除挂起的容器
+### 移除挂起的容器[container rm]
 
 ```shell
 docker container rm <container identifier>
@@ -344,7 +342,7 @@ hello-docker-container
 CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
 ```
 
-### 以交互式模式启动容器
+### 以交互式模式启动容器[-it]
 
 > 交互式镜像如 ubuntu之类的linux镜像，运行的时候进入到ubuntu的bash，启动的时候需要加  `-it`参数。
 >
@@ -374,7 +372,15 @@ UBUNTU_CODENAME=focal
 root@269a69740972:/#
 ```
 
->退出交互容器命令 `ctrl d`
+>需要注意的是在-it进入交互模式后，用exit退出会停止容器
+>
+>```shell
+>➜  hello-dock (master) sudo docker container run --rm -it --name ubuntu ubuntu                                                                                                                            ✱
+>root@5cf1025e8542:/# exit
+>exit
+>➜  hello-dock (master) sudo docker container ls                                                                                                                                                           ✱
+>CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+>```
 
 交互执行node，可以运行js代码
 
@@ -401,6 +407,46 @@ undefined
 undefined
 > a + b
 3
+```
+
+### 进入容器[attach or exec -it]
+
+启动一个ubuntu容器：
+
+```shell
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+➜  hello-dock (master) sudo docker container run --rm -dit --name ubuntu ubuntu                                                                                                                           ✱
+0bbe6199d5edfc29b6dee3def6b82d33ea01e97da5c650c60a7eeebc9451693a
+➜  hello-dock (master) sudo docker container ls                                                                                                                                                           ✱
+CONTAINER ID   IMAGE     COMMAND   CREATED         STATUS         PORTS     NAMES
+0bbe6199d5ed   ubuntu    "bash"    6 seconds ago   Up 5 seconds             ubuntu
+```
+
+`attach` 示例：
+
+```shell
+➜  hello-dock (master) sudo docker attach ubuntu                                                                                                                                                          ✱
+root@7c7af33eec53:/# echo $SHELL
+/bin/bash
+root@7c7af33eec53:/# exit
+exit
+➜  hello-dock (master) sudo docker container ls                                                                                                                                                           ✱
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+```
+
+>`attach`命令在退出容器交互的时候会停止容器，不推荐使用
+
+`exec -it`示例：
+
+```shell
+➜  hello-dock (master) sudo docker exec -it ubuntu bash                                                                                                                                                   ✱
+root@5fdbf1bcfe1b:/# echo $SHELL
+/bin/bash
+root@5fdbf1bcfe1b:/# exit
+exit
+➜  hello-dock (master) sudo docker container ls                                                                                                                                                           ✱
+CONTAINER ID   IMAGE     COMMAND   CREATED          STATUS          PORTS     NAMES
+5fdbf1bcfe1b   ubuntu    "bash"    41 seconds ago   Up 39 seconds             ubuntu
 ```
 
 ### 在容器里执行命令
@@ -476,6 +522,38 @@ t2.pdf
 1 FILES DELETED.
 ➜  test
 ```
+
+### 导入导出[export | import]
+
+导出：
+
+```shell
+➜  ~  sudo docker container ls
+CONTAINER ID   IMAGE     COMMAND     CREATED         STATUS         PORTS     NAMES
+4a9d4431994f   alpine    "/bin/sh"   3 seconds ago   Up 2 seconds             alpine
+5fdbf1bcfe1b   ubuntu    "bash"      6 minutes ago   Up 6 minutes             ubuntu
+➜  ~  sudo docker export alpine > ~/imagebak/alpine.tar
+➜  ~  ls ~/imagebak
+alpine.tar
+```
+
+导入：
+
+```shell
+➜  ~  sudo cat ~/imagebak/alpine.tar | sudo docker import - test/alpine
+sha256:08e69562ae6d5e7a656f9dc7123a226601df5e35bf1c0a768f9c2c0f666633b0
+➜  ~  sudo docker images
+REPOSITORY            TAG          IMAGE ID       CREATED          SIZE
+test/alpine           latest       08e69562ae6d   28 seconds ago   5.59MB
+uhuang/hello-dock     dev          53a1851c5630   56 minutes ago   189MB
+custom-nginx          alphine      168baac68146   6 days ago       12.2MB
+uhuang/custom-nginx   latest       168baac68146   6 days ago       12.2MB
+custom-nginx          built2       592d52212ef2   10 days ago      84.1MB
+custom-nginx          built        8ea7b598f205   10 days ago      359MB
+custom-nginx          packaged     b11ac2f129e6   10 days ago      132MB
+```
+
+>*注：用户既可以使用* *`docker load`* *来导入镜像存储文件到本地镜像库，也可以使用* *`docker import`* *来导入一个容器快照到本地镜像库。这两者的区别在于容器快照文件将丢弃所有的历史记录和元数据信息（即仅保存容器当时的快照状态），而镜像存储文件将保存完整记录，体积也要大。此外，从容器快照文件导入时可以重新指定标签等元数据信息。*
 
 
 

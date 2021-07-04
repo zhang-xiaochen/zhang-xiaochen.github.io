@@ -9,7 +9,7 @@ date: 2021-06-20 16:30:00
 
 # Docker_P2
 
-## 如何创建Docker镜像
+## 如何创建Docker镜像[image build]
 
 使用DockerFile文件创建镜像，Dockerfile是创建镜像的指令集。如下是一个简单的Nginx镜像的Dockerfile文件。
 
@@ -83,7 +83,7 @@ f9800dc2c291203187db0a11ee373df38ef44ebfdb0be869bb7fb368d5e85c94
 
 ![image-20210621212638568](/img/docker/image-20210621212638568.png)
 
-## 如何标记Docker镜像
+## 如何标记Docker镜像[--tag]
 
 在构建镜像的时候可以标记镜像，从而在使用的时候不必依赖随机生成的ID。命令如下
 
@@ -152,7 +152,7 @@ fhsinchy/rmbyext      latest     90eafb66c390   5 months ago     50.9MB
 docker image tag <image id> <image repository>:<image tag>
 ```
 
-## 如何列表展示、删除镜像
+## 如何列表展示、删除镜像[image ls | rm]
 
 列表展示
 
@@ -751,7 +751,7 @@ ENTRYPOINT [ "rmbyext" ]
 >
 >  执行`docker run --rm <container name> -c` ,容器实际执行的命令为`top -b`。
 
-## 共享Docker镜像
+## 共享Docker镜像[image push]
 
 去[Docker Hub](https://hub.docker.com/)注册免费账户，该账户可以托管无限的公共仓库和一个私有仓库。
 
