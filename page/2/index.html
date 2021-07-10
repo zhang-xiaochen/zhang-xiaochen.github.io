@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
-  <title>归档 - 方寸山</title>
+  <title>方寸山</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -43,7 +43,7 @@
 
 
 <body>
-  <header style="height: 60vh;">
+  <header style="height: 100vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
@@ -150,6 +150,10 @@
           </div>
 
           
+            <div class="scroll-down-bar">
+              <i class="iconfont icon-arrowdown"></i>
+            </div>
+          
         </div>
       </div>
     </div>
@@ -159,27 +163,82 @@
     
       <div class="container nopadding-md">
         <div class="py-5" id="board"
-          >
+          style=margin-top:0>
           
           <div class="container">
             <div class="row">
               <div class="col-12 col-md-10 m-auto">
                 
 
-<div class="list-group">
-  <p class="h4">共计 11 篇文章</p>
-  <hr>
-  
+
+  <div class="row mx-auto index-card">
     
-      
-      <p class="h5">2021</p>
     
-    <a href="/2021/01/23/blog/JsonParseBug/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">Object转Json遇到的坑</span>
-      <time style="float: right;">01-23</time>
-    </a>
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/08/29/nginx/Nginx1/" target="_self">
+          <img src="/img/Nginx.assets/nginx.png" srcset="/img/loading.gif" alt="Nginx--基础入门">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2020/08/29/nginx/Nginx1/">Nginx--基础入门</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/08/29/nginx/Nginx1/">
+          
+          
+            
+          
+          Nginx–基础入门
+Nginx（发音同“engine X”）是异步框架的网页服务器，也可以用作反向代理、负载平衡器和HTTP缓存。该软件由伊戈尔·赛索耶夫创建并于2004年首次公开发布[6]。2011年成立同名公司以提供支持[7]。2019年3月11日，Nginx公司被F5 Networks以6.7亿美元收购[8]。
+Nginx是免费的开源软件，根据类BSD许可证的条款发布。一大部分Web服务器
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-08-29 17:30" pubdate>
+              2020-08-29
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/web%E6%9C%8D%E5%8A%A1%E5%99%A8/">web服务器</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Nginx/">Nginx</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+
+
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <a class="extend prev" rel="prev" href="/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    </span>
+  </nav>
   
-</div>
+  <script>
+    for (ele of document.getElementById("pagination").getElementsByTagName("a")) {
+      ele.href += '#board';
+    }
+  </script>
 
 
 
@@ -272,7 +331,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "归档&nbsp;",
+        "永远相信美好的事情即将发生&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
